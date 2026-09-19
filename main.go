@@ -18,5 +18,5 @@ func main() {
 		return
 	}
 
-	fmt.Println(c1)
+	c1.DisplayInfo()
 }

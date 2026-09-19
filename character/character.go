@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"scarlet/piscine"
 	"strings"
 )
 
@@ -18,8 +19,12 @@ type Character struct {
 	Inventaire []string
 }
 
-// InitCharacter demande au joueur son nom et sa classe via le terminal,
-// puis crée un Character avec les autres valeurs passées en paramètres.
+func (c Character) String() string {
+	inventaireTexte := strings.Join(c.Inventaire, " ")
+	return fmt.Sprintf("{%s, %s lvl %d, PV%d/%d [%s]}",
+		c.Nom, c.Classe, c.Niveau, c.PVActuels, c.PVMax, inventaireTexte)
+}
+
 func InitCharacter(niveau int, pvMax int, pvActuels int, inventaire []string) (Character, error) {
 	if len(inventaire) > MaxInventaire {
 		return Character{}, fmt.Errorf("inventaire trop grand : %d objets fournis, maximum autorisé %d", len(inventaire), MaxInventaire)
@@ -29,7 +34,8 @@ func InitCharacter(niveau int, pvMax int, pvActuels int, inventaire []string) (C
 
 	fmt.Print("Entrez le nom de votre personnage : ")
 	nom, _ := lecteur.ReadString('\n')
-	nom = strings.TrimSpace(nom) // enlève le retour à la ligne et les espaces en trop
+	nom = strings.TrimSpace(nom)
+	nom = piscine.Capitalize(nom) // "rémi" ou "RÉMI" → "Rémi"
 
 	fmt.Print("Entrez la classe de votre personnage : ")
 	classe, _ := lecteur.ReadString('\n')
