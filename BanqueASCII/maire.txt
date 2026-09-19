@@ -1,20 +1,20 @@
                                                    
                    .xXXXXXXXx:                     
                .xXxxxxxxxxxxxxxXX:                 
-            :xxxxxxxXXXXXXxxxxxxxxxx.              
-          ;xxxxxxXXXXXXXXXXXXXxxxxxxxx.            
-         xxxxXXXXXXXXXXXXXXXXXxxxxxxxxxX           
-       +x+xXXXXXXX$$$$X$$$XXXXXxxxxxxxx++          
+            :xxxxxxxXXXXXXxxxxxxxxxx.                                       ________________________________
+          ;xxxxxxXXXXXXXXXXXXXxxxxxxxx.                                     |                               |
+         xxxxXXXXXXXXXXXXXXXXXxxxxxxxxxX                                    |      Maire du village         |
+       +x+xXXXXXXX$$$$X$$$XXXXXxxxxxxxx++                                   |_______________________________|
       xx+xxXXX$$$$$$$$$$$$$$XXXXxxxxxx+++;         
      ++++xXXXXXXXX$$$$XX$$$XX$XXXxxxxxx+++.        
-     x+xxxXXX$$$$$$$$$$$$$$$$$XXXXxxx+x++++        
+     x+xxxXXX$$$$$$$$$$$$$$$$$XXXXxxx+x++++                                " Bonjour ! Et bienvenue."
     .X+xxXXX$$$$$$$$$&&&&$$$$$$XXXx+Xx+++++;       
     .x;.   :x$$$$$$&&$:. ::+x$$$xxxxx+xx+x++       
     :  ;xxx;. ;$$$$&: ;X$$$&&x:.x+;..     .;       
       ;xxXX$$X. ;++ .+XXx+;;++x         .;;;x+.    
      ;+;:;.:;++     .x+++X+;+x++  .;:;x+++xxxxx    
   : .+;;;xxX$Xx .x+ .xxxxXXX$$XX +XXXxx+++;+xxX;   
-   . ;+xxxxXxx; +XX+ ;XXXXXXXXX :XXXxxx+++;X+xX.   
+   . ;+xxxxXxx; +XX+ ;XXXXXXXXX :XXXxxx+++;X+xX.                        
     ..:+xXXXX: ;XXXxx;:+X$$X+..+XXXXXxx++++XXX:    
      ;+:     +xX$XXx+xxx+;;+$&$$$XXXxx+x+x;xX;     
      xxXX$$XXXxXX$$XxxXx$XxX$&$$X$XXxx+xxxXX+      
