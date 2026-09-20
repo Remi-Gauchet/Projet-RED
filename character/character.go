@@ -35,11 +35,32 @@ func InitCharacter(niveau int, pvMax int, pvActuels int, inventaire []string) (C
 	fmt.Print("Entrez le nom de votre personnage : ")
 	nom, _ := lecteur.ReadString('\n')
 	nom = strings.TrimSpace(nom)
-	nom = piscine.Capitalize(nom) // "rémi" ou "RÉMI" → "Rémi"
+	nom = piscine.Capitalize(nom)
 
-	fmt.Print("Entrez la classe de votre personnage : ")
-	classe, _ := lecteur.ReadString('\n')
-	classe = strings.TrimSpace(classe)
+	classesValides := []string{"elfe", "nain", "humain"}
+	var classe string
+
+	for {
+		fmt.Print("Choisissez votre classe. Elfe, nain ou humain) : ")
+		saisie, _ := lecteur.ReadString('\n')
+		saisie = strings.TrimSpace(saisie)
+		saisie = strings.ToLower(saisie)
+
+		valide := false
+		for _, c := range classesValides {
+			if saisie == c {
+				valide = true
+				break
+			}
+		}
+
+		if valide {
+			classe = saisie
+			break
+		}
+
+		fmt.Println("Classe invalide. Veuillez choisir parmi : elfe, nain, humain.")
+	}
 
 	return Character{
 		Nom:        nom,
