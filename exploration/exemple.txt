@@ -1,0 +1,15 @@
+fmt.Println("Que voulez-vous faire ? (avancer / menu / quitter)")
+fmt.Print("> ")
+commande, _ := lecteur.ReadString('\n')
+commande = strings.TrimSpace(strings.ToLower(commande))
+
+switch commande {
+case "avancer":
+    // logique d'exploration
+case "menu":
+    c1.Menu()
+case "quitter":
+    return
+default:
+    fmt.Println("Commande inconnue.")
+}

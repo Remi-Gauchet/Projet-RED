@@ -22,7 +22,7 @@ func (c *Character) AccessInventory() {
 
 		auMoinsUnePotion := false
 		for _, objet := range c.Inventaire {
-			if objet == "Potion" {
+			if objet == "Potion de soins" {
 				auMoinsUnePotion = true
 				break
 			}
@@ -31,7 +31,7 @@ func (c *Character) AccessInventory() {
 		fmt.Println("\nQue voulez-vous faire ?")
 		fmt.Println("1. Fermer l'inventaire")
 		if auMoinsUnePotion {
-			fmt.Println("2. Boire une potion")
+			fmt.Println("2. Boire une potion de soins")
 		}
 		fmt.Print("Selon votre choix, tapez le numéro puis entrée : ")
 

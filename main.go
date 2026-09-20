@@ -19,5 +19,5 @@ func main() {
 	}
 
 	c1.DisplayInfo()
-	c1.AccessInventory()
+	c1.Menu()
 }
