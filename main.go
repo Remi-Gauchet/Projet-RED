@@ -11,7 +11,7 @@ func main() {
 		1,
 		100,
 		40,
-		[]string{"Potion", "Potion", "Potion"},
+		[]string{"Potion de soins", "Potion de soins", "Potion de soins"},
 	)
 	if err != nil {
 		fmt.Println("Erreur lors de la création du personnage :", err)
@@ -19,4 +19,5 @@ func main() {
 	}
 
 	c1.DisplayInfo()
+	c1.AccessInventory()
 }

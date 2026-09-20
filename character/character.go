@@ -20,9 +20,8 @@ type Character struct {
 }
 
 func (c Character) String() string {
-	inventaireTexte := strings.Join(c.Inventaire, " ")
-	return fmt.Sprintf("{%s, %s lvl %d, PV%d/%d [%s]}",
-		c.Nom, c.Classe, c.Niveau, c.PVActuels, c.PVMax, inventaireTexte)
+	return fmt.Sprintf("{%s, %s lvl %d, PV%d/%d, Inventaire %d/%d}",
+		c.Nom, c.Classe, c.Niveau, c.PVActuels, c.PVMax, len(c.Inventaire), MaxInventaire)
 }
 
 func InitCharacter(niveau int, pvMax int, pvActuels int, inventaire []string) (Character, error) {
