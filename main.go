@@ -17,5 +17,6 @@ func main() {
 		fmt.Println("Erreur lors de la création du personnage :", err)
 		return
 	}
+
 	c1.DisplayInfo()
 }

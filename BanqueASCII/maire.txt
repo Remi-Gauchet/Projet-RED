@@ -1,44 +1,34 @@
-                                                   
-                   .xXXXXXXXx:                     
-               .xXxxxxxxxxxxxxxXX:                 
-            :xxxxxxxXXXXXXxxxxxxxxxx.                                       ________________________________
-          ;xxxxxxXXXXXXXXXXXXXxxxxxxxx.                                     |                               |
-         xxxxXXXXXXXXXXXXXXXXXxxxxxxxxxX                                    |      Maire du village         |
-       +x+xXXXXXXX$$$$X$$$XXXXXxxxxxxxx++                                   |_______________________________|
-      xx+xxXXX$$$$$$$$$$$$$$XXXXxxxxxx+++;         
-     ++++xXXXXXXXX$$$$XX$$$XX$XXXxxxxxx+++.        
-     x+xxxXXX$$$$$$$$$$$$$$$$$XXXXxxx+x++++                                " Bonjour ! Et bienvenue."
-    .X+xxXXX$$$$$$$$$&&&&$$$$$$XXXx+Xx+++++;       
-    .x;.   :x$$$$$$&&$:. ::+x$$$xxxxx+xx+x++       
-    :  ;xxx;. ;$$$$&: ;X$$$&&x:.x+;..     .;       
-      ;xxXX$$X. ;++ .+XXx+;;++x         .;;;x+.    
-     ;+;:;.:;++     .x+++X+;+x++  .;:;x+++xxxxx    
-  : .+;;;xxX$Xx .x+ .xxxxXXX$$XX +XXXxx+++;+xxX;   
-   . ;+xxxxXxx; +XX+ ;XXXXXXXXX :XXXxxx+++;X+xX.                        
-    ..:+xXXXX: ;XXXxx;:+X$$X+..+XXXXXxx++++XXX:    
-     ;+:     +xX$XXx+xxx+;;+$&$$$XXXxx+x+x;xX;     
-     xxXX$$XXXxXX$$XxxXx$XxX$&$$X$XXxx+xxxXX+      
-     XxXXXXXXXx++xx+XXXX$XXxXXXXXXXxxx+xx+xX:      
-     xxxXXxxXxXXX$$$$&&$$X$XXxX$XXXXxxxxx+X+       
-     +xXXX$$x;+xxxxxxXxx+;+;x$X$$$$XXx+x+;;        
-     .xX$$&$XXx;++xXxxx++x$$$$$$$$$Xxx+x+;         
-      ;X$$&&$XXXXXXXX$&$$$$$$$$$$$XX++xx+:         
-      .xX$$$$XXXXX$$$&&&$$$$$$$$X$Xx;xXx;;: .      
-       .XXXXXXXXxXXX$$$$$$$$$$X$$Xx+XXx+;;:.::     
-         xXXXXXxxX$$$&&$$$$$$XX$XX+X$Xx;+:...:;    
-         .xXXxxXXXX$$$$$$$XxxXXXX+X$$X++... ...::  
-          .++XxxxXXXXXXxx+xXXX$X+xXXx+...  .... ...
-            ++xxxxxxxxX$$$$XX$XxXXx+;.. .....   ...
-          .;;::++xxXX$$$$$XXXxxx+++:.  ..:..     ..
-      ;+:::::.+..+++xxXXXXX++x++x:.   :..... ......
-.::::.::::::: :+.:;;+xxXX+;++xx;.  ...... .   . ...
-::::.....:;:. :++:;;++xx++xxXX:   ..... .    ..    
-:;:.. .:::.. .+++;+x+x+:xxX$X.   ....   .   . .  . 
-;:..  .::... :xXxX+xXxxXXXX;   ....  ...     ..... 
-:..  ..;.    ;++; .;xXXxx:  .......  ........:...  
-:.   ...     ++    .;$x:  .:.......  ......:::.....
-:.   ...    .x;   :;:   .................:::.......
-:.    .:    ;+  .:.  .................::::.........
-:.    .;   .x; .    ...........:....:::............
-..   ....  ;x. .............::::.:::.::::::........
-:.      :  x: .....:........::::::::::::::.........
+                :xXxxxxxxxxxxxxxxxxxxxxxx;                   
+             xx+xxxxxxxXXXXxxxxxxXxxxxxxxxxxx                
+          :x++xxxxxXXXXXXXXXXxXXXXXXxxxxxxxxx+x:                                    ________________________________
+        :x++xxXXXXXXXX$$$XXXXXXXXXXxxxxxxxxxx++++                                   |                               |
+       x+++xxXXXXXXXX$$$$$XXX$$$$XXXXXx+x+xxxx++;+:                                 |      Maire du village         |
+     .x+++xxxxXXXXXXXX$X$XXX$$$$XXXXXXXxx+x+xx+++;;                                 |_______________________________|
+     ;x+++xxxXXXXX$$$X$$$$$$$$$$$$$XXXXXxxxx+++++++;         
+     ;x+;;;;;+XX$$$$$$$&&&X+....;+X$$Xxxxxxx++x+++++.        
+     .  :+xxx;.  +X$$$$$. :xXXX$$$$+:.;+++:..     .:;                       "Cela fait 30 ans que je suis maire de ce village"
+  '    :+xxxxxX$X   .+. .+xXx+;:;.:;+;         .:+++xxx;     
+ .   .++;.:+::;+++   .  .xx++xXxxxXxx+  :;x+++x+;+;xxx+X+                 "J'aime à penser que les gens apprécient mon travail..."
+    ..+;+++xxXXxx+ .xxx. +XXXxxxXXXXX+ ;xXXxx+++;+;+x+xXx    
+     : ;xxxxXXXX; :xXXXxx:.xXXXXXXX; .XXXXxxxx+;++x+Xxxx     
+      x;:  ... .;+XXXXXx+xx++;:::+X$$$XXXxxxx+++++++xxx      
+      +xxXXXXXXXxxXX$$Xx+xxxX$XxxX$$$XXXXXxxx++++++Xx+       
+      ++xXXXXXxxxx+;+++X$$$XXXXXxxxXXXXXXXxxxx+++++xx        
+      ++xxXx+Xx+xXXXXXXX$&&$$XXXxXXXxXXXXXXxxx+xx+++         
+      ++xX$$$$Xx+::+xxXxXXXx+;xx$$$X$$X$$$Xxx++x++.          
+       ;xX$$$$$XxXxxxxxxX$$$$XX$XX$$$$$$$Xx+;++x+:.          
+        +xXXX$$XxxXxXXX$$&$$$$X$$$$$$XXXXx+;+xx+;:;. :       
+         :XXXXXXxxXxxXXX$$$$XXX$$$$XxX$XX++XXxx;:+:..:;      
+           +XXXxxXxxXX$$$&$$$$$$XXxxXXXX+xXXXx+;;.... .:;    
+            ;xxxxxxxXXXXXXXXXXxxxxXXXXx+xXXX++:...  .......::
+              +;xxxxxx++++xxXXXXXXX$XxxXXX+x...  . ....  ....
+            ::::.:;++xxXXX$$$XXXXXxxxx+;+:..   ......     ...
+    ...::::::::: +; :;+++xxxXXXx+++++x+:..  ........  .......
+:.:::::::::::::. ;;.::;;;+xxxx+;xx+X+.   ......  ..   ...  ..
+::::......:;... .++x;;++;+;x:;+xxXX.     ....  ...  ....   . 
+;;:.. ..:;:..:  +x+xxx+XXxxxXXXXX:    ... . .....  . ....... 
+::..   .::.    .;+x;. ::xxXXxx;   ........  ..........::... .
+:..   ..:      :++    .:;xx:   ........... .........::.......
+:.    ..:     .++;  :;::  ....................:.:::..........
+:.     .;:    ;+;  :.  ....................:::::.............
+:.    . .:   :++  ...................:::::::::::::...........
