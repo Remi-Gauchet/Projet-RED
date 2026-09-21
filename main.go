@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"scarlet/character"
+	"scarlet/exploration"
 )
 
 func afficherIntro(classe string) {
@@ -31,5 +32,5 @@ func main() {
 
 	afficherIntro(c1.Classe)
 
-	c1.Menu()
+	exploration.Explorer(&c1)
 }
