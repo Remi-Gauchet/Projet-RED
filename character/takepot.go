@@ -7,9 +7,9 @@ func (c *Character) TakePot() error {
 		return fmt.Errorf("points de vie déjà au maximum, impossible de boire une potion")
 	}
 
-	err := c.RemoveInventory("Potion")
+	err := c.RemoveInventory("Potion de soins")
 	if err != nil {
-		return fmt.Errorf("aucune potion dans l'inventaire")
+		return fmt.Errorf("Aucune potion de soins dans l'inventaire")
 	}
 
 	c.PVActuels += 50
