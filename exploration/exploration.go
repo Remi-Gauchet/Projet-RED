@@ -9,6 +9,7 @@ import (
 	"scarlet/ascii"
 	"scarlet/character"
 	"scarlet/marchand"
+	"scarlet/outils"
 )
 
 // Explorer lance la boucle principale d'exploration du personnage.
@@ -20,6 +21,7 @@ func Explorer(c *character.Character) {
 		switch localisation {
 
 		case "entree_village":
+			outils.ClearScreen()
 			ascii.AfficherASCII("BanqueASCII/entree_village.txt")
 			fmt.Println("\nVous êtes à l'entrée du village.")
 			fmt.Println("1. Se rendre à la place marchande")
@@ -36,6 +38,7 @@ func Explorer(c *character.Character) {
 			}
 
 		case "place_marchande":
+			outils.ClearScreen()
 			ascii.AfficherASCII("BanqueASCII/place_marchande.txt")
 			fmt.Println("\nVous êtes sur la place marchande.")
 			fmt.Println("1. Retourner à l'entrée du village")
@@ -55,6 +58,7 @@ func Explorer(c *character.Character) {
 			}
 
 		case "echoppe_marchand":
+			outils.ClearScreen()
 			ascii.AfficherASCII("BanqueASCII/echoppe_marchand.txt")
 			fmt.Println("\nVous êtes dans l'échoppe du marchand.")
 			fmt.Println("1. Retourner sur la place marchande")

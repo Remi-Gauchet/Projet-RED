@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"scarlet/outils"
 	"strings"
 )
 
@@ -13,6 +14,7 @@ func (c *Character) Menu() {
 	lecteur := bufio.NewReader(os.Stdin)
 
 	for {
+		outils.ClearScreen()
 		fmt.Println("\n--- Menu ---")
 		fmt.Println("1. Afficher les informations du personnage")
 		fmt.Println("2. Accéder à l'inventaire")
@@ -24,13 +26,15 @@ func (c *Character) Menu() {
 
 		switch choix {
 		case "1":
+			outils.ClearScreen()
 			c.DisplayInfo()
 
 		case "2":
+			outils.ClearScreen()
 			c.AccessInventory()
 
 		case "3":
-			fmt.Println("À bientôt ! La bise !")
+			fmt.Println("Fermeture du menu")
 			return
 
 		default:
