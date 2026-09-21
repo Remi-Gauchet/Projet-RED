@@ -20,13 +20,13 @@ type Character struct {
 	PVActuels  int
 	Inventaire []string
 	Or         int
+	Equipement Equipment
 }
 
 func (c Character) String() string {
-	return fmt.Sprintf("{%s, %s lvl %d, PV%d/%d, Inventaire %d/%d}",
-		c.Nom, c.Classe, c.Niveau, c.PVActuels, c.PVMax, len(c.Inventaire), MaxInventaire)
+	return fmt.Sprintf("{%s, %s lvl %d, PV%d/%d, Inventaire %d/%d, Équipement: Tête: %s | Torse: %s | Pieds: %s}",
+		c.Nom, c.Classe, c.Niveau, c.PVActuels, c.PVMax, len(c.Inventaire), MaxInventaire, c.Equipement.Tete, c.Equipement.Torse, c.Equipement.Pieds)
 }
-
 func InitCharacter(niveau int, inventaire []string) (Character, error) {
 	if len(inventaire) > MaxInventaire {
 		return Character{}, fmt.Errorf("inventaire trop grand : %d objets fournis, maximum autorisé %d", len(inventaire), MaxInventaire)
@@ -74,6 +74,7 @@ func InitCharacter(niveau int, inventaire []string) (Character, error) {
 		PVActuels:  pvActuels,
 		Inventaire: inventaire,
 		Or:         OrDepart,
+		Equipement: Equipment{},
 	}, nil
 }
 
