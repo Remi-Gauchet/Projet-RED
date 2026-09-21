@@ -24,7 +24,9 @@ func main() {
 		100,
 		40,
 		[]string{"Potion de soins", "Potion de soins", "Potion de soins"},
+		100,
 	)
+
 	if err != nil {
 		fmt.Println("Erreur lors de la création du personnage :", err)
 		return

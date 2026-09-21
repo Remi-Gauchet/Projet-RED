@@ -8,6 +8,7 @@ import (
 
 	"scarlet/ascii"
 	"scarlet/character"
+	"scarlet/marchand"
 )
 
 // Explorer lance la boucle principale d'exploration du personnage.
@@ -56,14 +57,17 @@ func Explorer(c *character.Character) {
 		case "echoppe_marchand":
 			ascii.AfficherASCII("BanqueASCII/echoppe_marchand.txt")
 			fmt.Println("\nVous êtes dans l'échoppe du marchand.")
-			fmt.Println("1. Retourner à la place marchande")
-			fmt.Println("2. Ouvrir le menu")
+			fmt.Println("1. Retourner sur la place marchande")
+			fmt.Println("2. Commercer avec le marchand")
+			fmt.Println("3. Ouvrir le menu")
 
 			choix := lireChoix(lecteur)
 			switch choix {
 			case "1":
 				localisation = "place_marchande"
 			case "2":
+				marchand.Echoppe(c)
+			case "3":
 				c.Menu()
 			default:
 				fmt.Println("Choix invalide.")

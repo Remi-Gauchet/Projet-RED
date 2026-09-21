@@ -4,23 +4,13 @@ import "fmt"
 
 func (c *Character) TakePot() error {
 	if c.PVActuels == c.PVMax {
-		return fmt.Errorf("Je suis déjà en pleine forme. Gardons cette potion pour plus tard !")
+		return fmt.Errorf("points de vie déjà au maximum, impossible de boire une potion")
 	}
 
-	index := -1
-	for i, objet := range c.Inventaire {
-		if objet == "Potion de soins" {
-			index = i
-			break
-		}
+	err := c.RemoveInventory("Potion")
+	if err != nil {
+		return fmt.Errorf("aucune potion dans l'inventaire")
 	}
-
-	if index == -1 {
-		return fmt.Errorf("Je n'ai plus de potion de soins...")
-	}
-
-	// Retire la potion trouvée à l'index "index" du slice
-	c.Inventaire = append(c.Inventaire[:index], c.Inventaire[index+1:]...)
 
 	c.PVActuels += 50
 	if c.PVActuels > c.PVMax {

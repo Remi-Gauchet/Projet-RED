@@ -9,6 +9,7 @@ import (
 )
 
 const MaxInventaire = 10
+const OrDepart = 100
 
 type Character struct {
 	Nom        string
@@ -17,6 +18,7 @@ type Character struct {
 	PVMax      int
 	PVActuels  int
 	Inventaire []string
+	Or         int
 }
 
 func (c Character) String() string {
@@ -24,7 +26,7 @@ func (c Character) String() string {
 		c.Nom, c.Classe, c.Niveau, c.PVActuels, c.PVMax, len(c.Inventaire), MaxInventaire)
 }
 
-func InitCharacter(niveau int, pvMax int, pvActuels int, inventaire []string) (Character, error) {
+func InitCharacter(niveau int, pvMax int, pvActuels int, inventaire []string, or int) (Character, error) {
 	if len(inventaire) > MaxInventaire {
 		return Character{}, fmt.Errorf("inventaire trop grand : %d objets fournis, maximum autorisé %d", len(inventaire), MaxInventaire)
 	}
@@ -68,5 +70,6 @@ func InitCharacter(niveau int, pvMax int, pvActuels int, inventaire []string) (C
 		PVMax:      pvMax,
 		PVActuels:  pvActuels,
 		Inventaire: inventaire,
+		Or:         OrDepart,
 	}, nil
 }
