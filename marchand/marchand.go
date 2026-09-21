@@ -7,7 +7,9 @@ import (
 	"strconv"
 	"strings"
 
+	"scarlet/ascii"
 	"scarlet/character"
+	"scarlet/outils"
 )
 
 // Objet représente un article vendu par le marchand
@@ -73,6 +75,8 @@ func acheter(c *character.Character, choix string) {
 	}
 
 	c.Or -= objet.Prix
+	outils.ClearScreen()
+	ascii.AfficherASCII("BanqueASCII/echoppe_marchand.txt")
 	fmt.Printf("Vous avez acheté %s pour %d or.\n", objet.Nom, objet.Prix)
 }
 

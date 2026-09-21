@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"scarlet/ascii"
+	"scarlet/audio"
 	"scarlet/character"
 	"scarlet/marchand"
 	"scarlet/outils"
@@ -59,8 +60,8 @@ func Explorer(c *character.Character) {
 
 		case "echoppe_marchand":
 			outils.ClearScreen()
-			ascii.AfficherASCII("BanqueASCII/echoppe_marchand.txt")
-			fmt.Println("\nVous êtes dans l'échoppe du marchand.")
+			fmt.Println("\nVous voici dans l'échoppe du marchand.")
+			audio.PlaySound("BanqueSon/NPC/vendeur.ogg")
 			fmt.Println("1. Retourner sur la place marchande")
 			fmt.Println("2. Commercer avec le marchand")
 			fmt.Println("3. Ouvrir le menu")
@@ -68,6 +69,7 @@ func Explorer(c *character.Character) {
 			choix := lireChoix(lecteur)
 			switch choix {
 			case "1":
+				audio.PlaySound("BanqueSon/NPC/vendeurbye.ogg")
 				localisation = "place_marchande"
 			case "2":
 				marchand.Echoppe(c)

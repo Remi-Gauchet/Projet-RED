@@ -4,9 +4,10 @@
 Faites Ctrl + Shift + P
 Puis cliquez deux dois sur View : Zoom Out.
 Ajustez le zoom pour que le contenu de ReadMe soit cadrés.
+À la racine du projet, vous devez aussi taper et entrer les commandes suivantes, pour importer les modules :
+go get github.com/gopxl/beep/v2@latest
 
-                                        Bienvenue, aventurier ! Je suis Alythess, démone de la passion ardente.
-                                                    J'espère avoir l'occasion de vous revoir...
+
                                                         ...                              ....                                                                     
                                                       .  .                                ..  ::                                                                  
                                                    .:   .             .:::.:;+;;:.          ..  .::.                                                              
