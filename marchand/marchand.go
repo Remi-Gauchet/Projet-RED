@@ -19,6 +19,10 @@ type Objet struct {
 var catalogue = []Objet{
 	{Nom: "Potion de soins", Prix: 3},
 	{Nom: "Potion Poison", Prix: 6},
+	{Nom: "Fourrure de Loup", Prix: 4},
+	{Nom: "Peau de Troll", Prix: 7},
+	{Nom: "Cuir de Sanglier", Prix: 3},
+	{Nom: "Plume de Corbeau", Prix: 1},
 }
 
 // Echoppe ouvre le menu de la boutique du marchand : achat et vente d'objets.
@@ -27,7 +31,7 @@ func Echoppe(c *character.Character) {
 
 	for {
 		fmt.Printf("\n--- Boutique du marchand --- (Or : %d)\n", c.Or)
-		fmt.Println("Le marchand propose :")
+		fmt.Println("Jetez un oeil à mes marchandises !")
 		for i, objet := range catalogue {
 			fmt.Printf("%d. Acheter %s - %d or\n", i+1, objet.Nom, objet.Prix)
 		}
@@ -79,7 +83,7 @@ func vendre(c *character.Character, lecteur *bufio.Reader) {
 	}
 
 	fmt.Println("Votre inventaire :", strings.Join(c.Inventaire, " - "))
-	fmt.Print("Quel objet voulez-vous vendre ? ")
+	fmt.Print("Quel objet voulez-vous vendre ? Ecrivez le en toute lettre")
 	nom, _ := lecteur.ReadString('\n')
 	nom = strings.TrimSpace(nom)
 

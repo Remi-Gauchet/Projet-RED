@@ -4,8 +4,9 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"scarlet/piscine"
 	"strings"
+
+	"scarlet/piscine"
 )
 
 const MaxInventaire = 10
@@ -26,7 +27,7 @@ func (c Character) String() string {
 		c.Nom, c.Classe, c.Niveau, c.PVActuels, c.PVMax, len(c.Inventaire), MaxInventaire)
 }
 
-func InitCharacter(niveau int, pvMax int, pvActuels int, inventaire []string, or int) (Character, error) {
+func InitCharacter(niveau int, inventaire []string) (Character, error) {
 	if len(inventaire) > MaxInventaire {
 		return Character{}, fmt.Errorf("inventaire trop grand : %d objets fournis, maximum autorisé %d", len(inventaire), MaxInventaire)
 	}
@@ -42,7 +43,7 @@ func InitCharacter(niveau int, pvMax int, pvActuels int, inventaire []string, or
 	var classe string
 
 	for {
-		fmt.Print("Choisissez votre classe. Elfe, nain ou humain) : ")
+		fmt.Print("Choisissez votre classe (elfe / nain / humain) : ")
 		saisie, _ := lecteur.ReadString('\n')
 		saisie = strings.TrimSpace(saisie)
 		saisie = strings.ToLower(saisie)
@@ -63,6 +64,8 @@ func InitCharacter(niveau int, pvMax int, pvActuels int, inventaire []string, or
 		fmt.Println("Classe invalide. Veuillez choisir parmi : elfe, nain, humain.")
 	}
 
+	pvMax, pvActuels := pvSelonClasse(classe)
+
 	return Character{
 		Nom:        nom,
 		Classe:     classe,
@@ -72,4 +75,18 @@ func InitCharacter(niveau int, pvMax int, pvActuels int, inventaire []string, or
 		Inventaire: inventaire,
 		Or:         OrDepart,
 	}, nil
+}
+
+// pvSelonClasse renvoie les PV maximum et actuels de départ selon la classe choisie.
+func pvSelonClasse(classe string) (int, int) {
+	switch classe {
+	case "elfe":
+		return 80, 40
+	case "nain":
+		return 120, 60
+	case "humain":
+		return 100, 50
+	default:
+		return 100, 50 // valeur de secours, ne devrait jamais arriver
+	}
 }
