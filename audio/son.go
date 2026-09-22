@@ -47,7 +47,7 @@ func playInternal(path string, wait bool) {
 
 	resampled := beep.Resample(4, format.SampleRate, sampleRate, streamer)
 
-	done := make(chan bool)
+	done := make(chan bool, 1) // bufferisé : l'envoi ne bloque jamais, même sans lecteur
 	speaker.Play(beep.Seq(resampled, beep.Callback(func() {
 		streamer.Close()
 		done <- true
