@@ -19,8 +19,7 @@ func (c *Character) Menu() {
 		fmt.Println("\n--- Menu ---")
 		fmt.Println("1. Afficher les informations du personnage")
 		fmt.Println("2. Accéder à l'inventaire")
-		fmt.Println("3. Équipement")
-		fmt.Println("4. Sortir du menu")
+		fmt.Println("3. Sortir du menu")
 		fmt.Print("Entrez le numéro de votre choix : ")
 
 		choix, _ := lecteur.ReadString('\n')
@@ -37,10 +36,6 @@ func (c *Character) Menu() {
 			c.AccessInventory()
 
 		case "3":
-			outils.ClearScreen()
-			c.GererEquipement()
-
-		case "4":
 			fmt.Println("Fermeture du menu")
 			return
 
