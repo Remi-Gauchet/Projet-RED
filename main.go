@@ -1,9 +1,11 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"os"
 
+	"scarlet/audio"
 	"scarlet/character"
 	"scarlet/exploration"
 )
@@ -30,5 +32,14 @@ func main() {
 
 	afficherIntro(c1.Classe)
 
+	attendreEntree()
+
+	audio.PlayMusic("BanqueSon/musique/ambiance.ogg")
+
 	exploration.Explorer(&c1)
+}
+
+func attendreEntree() {
+	fmt.Println("\nAppuyez sur Entrée pour continuer...")
+	bufio.NewReader(os.Stdin).ReadString('\n')
 }

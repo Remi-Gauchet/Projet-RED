@@ -142,7 +142,10 @@ func Explorer(c *character.Character) {
 		case "auberge":
 			outils.ClearScreen()
 			ascii.AfficherASCII("BanqueASCII/auberge.txt")
-			fmt.Println("\nÀ peine la porte ouverte, une odeur d'alcool vous submerge.")
+			audio.PlayMusic("BanqueSon/musique/auberge.ogg")
+			audio.PlaySound("BanqueSon/NPC/aubergistebonjour.ogg")
+			fmt.Println("\nÀ peine la porte ouverte, une odeur d'alcool vous submerge. Des nains, partout, éclatent de rire en buvant.")
+			fmt.Println("L'un d'entre eux manque de s'étouffer, et fait couler sa bière sur sa longue barbe.")
 			fmt.Println("Une naine chaleureuse s'avance vers vous avec des pintes de bière :")
 			fmt.Println("\"Bienvenue à l'Auberge du Cul Tourné ! Vous voulez dormir ici ? C'est 5 pièces la chambre.\"")
 			fmt.Println("1. Sortir de l'auberge.")
@@ -152,6 +155,8 @@ func Explorer(c *character.Character) {
 			choix := lireChoix(lecteur)
 			switch choix {
 			case "1":
+				audio.PlaySoundBlocking("BanqueSon/NPC/aubergistebye.ogg")
+				audio.PlayMusic("BanqueSon/musique/ambiance.ogg")
 				localisation = "rue_principale"
 			case "2":
 				err := c.SeReposer()
@@ -225,7 +230,7 @@ func Explorer(c *character.Character) {
 					case "1":
 						outils.ClearScreen()
 						ascii.AfficherASCII("BanqueASCII/duc.txt")
-						fmt.Println("\nSi vous y parvenez, ma gratitude vous sera acquise. Prenez cette carte, vous en aurez besoin.")
+						fmt.Println("\n\"Si vous y parvenez, ma gratitude vous sera acquise. Prenez cette carte, vous en aurez besoin.\"")
 						c.QueteMagieNoire++
 						attendreEntree(lecteur)
 						audio.PlaySoundBlocking("BanqueSon/NPC/ducbye.ogg")
