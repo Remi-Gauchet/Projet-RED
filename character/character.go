@@ -9,25 +9,30 @@ import (
 	"scarlet/piscine"
 )
 
-const MaxInventaire = 10
+const InventaireBase = 10
 const OrDepart = 100
+const MaxUpgrades = 3
+const CoutUpgrade = 30
+const BonusUpgrade = 10
 
 type Character struct {
-	Nom        string
-	Classe     string
-	Niveau     int
-	PVMax      int
-	PVActuels  int
-	ManaMax    int
-	ManaActuel int
-	Inventaire []string
-	Or         int
-	Equipement Equipment
+	Nom               string
+	Classe            string
+	Niveau            int
+	PVMax             int
+	PVActuels         int
+	ManaMax           int
+	ManaActuel        int
+	Inventaire        []string
+	InventaireMax     int
+	UpgradesRestantes int
+	Or                int
+	Equipement        Equipment
 }
 
 func (c Character) String() string {
 	return fmt.Sprintf("{%s, %s lvl %d, PV%d/%d, Mana%d/%d, Inventaire %d/%d\nÉquipement: Tête: %s | Torse: %s | Pieds: %s}",
-		c.Nom, c.Classe, c.Niveau, c.PVActuels, c.PVMax, c.ManaActuel, c.ManaMax, len(c.Inventaire), MaxInventaire,
+		c.Nom, c.Classe, c.Niveau, c.PVActuels, c.PVMax, c.ManaActuel, c.ManaMax, len(c.Inventaire), c.InventaireMax,
 		afficherEmplacement(c.Equipement.Tete),
 		afficherEmplacement(c.Equipement.Torse),
 		afficherEmplacement(c.Equipement.Pieds))
@@ -41,8 +46,8 @@ func afficherEmplacement(objet string) string {
 }
 
 func InitCharacter(niveau int, inventaire []string) (Character, error) {
-	if len(inventaire) > MaxInventaire {
-		return Character{}, fmt.Errorf("inventaire trop grand : %d objets fournis, maximum autorisé %d", len(inventaire), MaxInventaire)
+	if len(inventaire) > InventaireBase {
+		return Character{}, fmt.Errorf("inventaire trop grand : %d objets fournis, maximum autorisé %d", len(inventaire), InventaireBase)
 	}
 
 	lecteur := bufio.NewReader(os.Stdin)
@@ -81,20 +86,21 @@ func InitCharacter(niveau int, inventaire []string) (Character, error) {
 	manaMax := manaSelonClasse(classe)
 
 	return Character{
-		Nom:        nom,
-		Classe:     classe,
-		Niveau:     niveau,
-		PVMax:      pvMax,
-		PVActuels:  pvActuels,
-		ManaMax:    manaMax,
-		ManaActuel: manaMax,
-		Inventaire: inventaire,
-		Or:         OrDepart,
-		Equipement: Equipment{},
+		Nom:               nom,
+		Classe:            classe,
+		Niveau:            niveau,
+		PVMax:             pvMax,
+		PVActuels:         pvActuels,
+		ManaMax:           manaMax,
+		ManaActuel:        manaMax,
+		Inventaire:        inventaire,
+		InventaireMax:     InventaireBase,
+		UpgradesRestantes: MaxUpgrades,
+		Or:                OrDepart,
+		Equipement:        Equipment{},
 	}, nil
 }
 
-// pvSelonClasse renvoie les PV maximum et actuels de départ selon la classe choisie.
 func pvSelonClasse(classe string) (int, int) {
 	switch classe {
 	case "elfe":
@@ -108,7 +114,6 @@ func pvSelonClasse(classe string) (int, int) {
 	}
 }
 
-// manaSelonClasse renvoie le mana maximum de départ selon la classe choisie.
 func manaSelonClasse(classe string) int {
 	switch classe {
 	case "elfe":

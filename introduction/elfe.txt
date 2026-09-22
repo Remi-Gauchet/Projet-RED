@@ -9,13 +9,7 @@ Vous vous êtes gorgée des pouvoirs occultes de votre sombre maîtresse, au pri
 Récemment, elle vous a susurré qu’une grande catastrophe allait survenir dans la région de Kaysersberg.
 
 Vous êtes une occultiste. Et bien que peu connaissent votre nom en ces contrées, vous leur ferez payer le prix de leur ignorance.
-                
-                                            Que la moisson des âmes commence !
 
 
-Port d'arme :       Toutes
-Port d'armure :     Armure légère seulement
-
-
-Bonus racial :      + 2 en magie
-Malus racial :	    - 20 PV
+			Bonus racial :      + 20 Mana
+			Malus racial :	    - 20 PV

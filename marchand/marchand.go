@@ -37,18 +37,24 @@ func Echoppe(c *character.Character) {
 		for i, objet := range catalogue {
 			fmt.Printf("%d. Acheter %s - %d or\n", i+1, objet.Nom, objet.Prix)
 		}
-		fmt.Println("v. Vendre un objet")
-		fmt.Println("0. Quitter la boutique")
+		fmt.Println("1. Vendre un objet")
+		fmt.Printf("2. Améliorer la capacité de l'inventaire (%d or) [%d/%d]\n", character.CoutUpgrade, character.MaxUpgrades-c.UpgradesRestantes, character.MaxUpgrades)
+		fmt.Println("3. Quitter la boutique")
 		fmt.Print("Votre choix : ")
 
 		choix, _ := lecteur.ReadString('\n')
 		choix = strings.TrimSpace(choix)
 
 		switch choix {
-		case "0":
+		case "3":
 			return
-		case "v":
+		case "1":
 			vendre(c, lecteur)
+		case "2":
+			err := c.UpgradeInventorySlot()
+			if err != nil {
+				fmt.Println("Erreur :", err)
+			}
 		default:
 			acheter(c, choix)
 		}

@@ -97,7 +97,7 @@ func fabriquerObjet(c *character.Character, r Recette) {
 
 	// Vérification de la place dans l'inventaire (composants consommés, 1 objet ajouté)
 	placeApresFabrication := len(c.Inventaire) - totalComposants(r) + 1
-	if placeApresFabrication > character.MaxInventaire {
+	if placeApresFabrication > c.InventaireMax {
 		fmt.Println("Votre inventaire n'aura pas assez de place pour récupérer l'objet fabriqué.")
 		return
 	}

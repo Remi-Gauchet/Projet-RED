@@ -2,10 +2,9 @@ package character
 
 import "fmt"
 
-// AddInventory ajoute un objet à l'inventaire, en respectant la taille maximale.
 func (c *Character) AddInventory(item string) error {
-	if len(c.Inventaire) >= MaxInventaire {
-		return fmt.Errorf("inventaire plein (maximum %d objets)", MaxInventaire)
+	if len(c.Inventaire) >= c.InventaireMax {
+		return fmt.Errorf("inventaire plein (maximum %d objets)", c.InventaireMax)
 	}
 	c.Inventaire = append(c.Inventaire, item)
 	return nil

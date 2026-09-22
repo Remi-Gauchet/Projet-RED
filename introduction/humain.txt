@@ -1,25 +1,19 @@
-            Quelques semaines après votre naissance, vous étiez prédestiné à mourir de la dysenterie.
+                Quelques semaines après votre naissance, vous étiez prédestiné à mourir de la dysenterie.
 C’est sans compter sur l’intervention de l’ange Ilyzaelle qui est descendue des cieux dans toute sa gloire !
 Ce n’est que par sa grâce que vous avez survécu. Et dès lors, vous n’avez jamais cessé de croire en la sainte lumière.
 Il allait de soi qu’à la majorité, vous quitteriez votre bourgade pour rejoindre l’ordre des paladins.
 
 
-        Mais récemment, votre ordre a reçu une lettre du prêtre de Kaysersberg.
+                Mais récemment, votre ordre a reçu une lettre du prêtre de Kaysersberg.
 Une vague d'énergie malfaisante a été ressentie, jusque dans leur grande cathédrale.
 D’inquiétantes nouvelles... Votre chevalier-capitaine vous envoie enquêter.
-
-
-En tant que paladin, votre cœur est pur, et votre jugement fait loi.
-Vous attrapez votre épée, revêtez votre cape, et enjambez votre cheval.
 Récitant une prière, vous ressentez une chaleur familière. Les cieux sont avec vous.
-        
-
-        Gâre à vous, suppôts du mal, car nul ne saurait échapper à la justice !
+Vous revêtez votre cape et commencez votre aventure.
 
 
+                En tant que paladin, votre cœur est pur, et votre jugement fait loi.
+Gâre à vous, suppôts du mal, car nul ne saurait échapper à la justice !
 
-Port d'arme :       Toutes
-Port d'armures :    Armure lourde ou légère
 
-Bonus racial :      Béni par un ange  (effet inconnu)
-Malus racial :      Aucun
+        Bonus racial :      Aucun
+        Malus racial :      Aucun
