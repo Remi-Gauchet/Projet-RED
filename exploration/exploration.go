@@ -63,6 +63,7 @@ func Explorer(c *character.Character) {
 
 		case "echoppe_marchand":
 			outils.ClearScreen()
+			ascii.AfficherASCII("BanqueASCII/echoppe.txt")
 			fmt.Println("\nVous voici dans l'échoppe du marchand.")
 			audio.PlaySound("BanqueSon/NPC/vendeur.ogg")
 			fmt.Println("1. Retourner sur la place marchande")
