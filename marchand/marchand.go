@@ -25,6 +25,9 @@ var catalogue = []Objet{
 	{Nom: "Peau de Troll", Prix: 7},
 	{Nom: "Cuir de Sanglier", Prix: 3},
 	{Nom: "Plume de Corbeau", Prix: 1},
+	{Nom: "Livre de Sort : Boule de Feu", Prix: 25},
+	{Nom: "Livre de Sort : Glace", Prix: 30},
+	{Nom: "Livre de Sort : Lumière Divine", Prix: 35},
 }
 
 // Echoppe ouvre le menu de la boutique du marchand : achat et vente d'objets.

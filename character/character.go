@@ -16,6 +16,7 @@ const CoutUpgrade = 30
 const BonusUpgrade = 10
 
 type Character struct {
+<<<<<<< HEAD
 	Nom               string
 	Classe            string
 	Niveau            int
@@ -28,6 +29,19 @@ type Character struct {
 	UpgradesRestantes int
 	Or                int
 	Equipement        Equipment
+=======
+	Nom        string
+	Classe     string
+	Niveau     int
+	PVMax      int
+	PVActuels  int
+	ManaMax    int
+	ManaActuel int
+	Inventaire []string
+	Sorts      []string
+	Or         int
+	Equipement Equipment
+>>>>>>> 8d8665f (test)
 }
 
 func (c Character) String() string {
