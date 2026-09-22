@@ -18,28 +18,15 @@ type Character struct {
 	Niveau     int
 	PVMax      int
 	PVActuels  int
-	ManaMax    int
-	ManaActuel int
 	Inventaire []string
 	Or         int
 	Equipement Equipment
 }
 
 func (c Character) String() string {
-	return fmt.Sprintf("{%s, %s lvl %d, PV%d/%d, Mana%d/%d, Inventaire %d/%d\nÉquipement: Tête: %s | Torse: %s | Pieds: %s}",
-		c.Nom, c.Classe, c.Niveau, c.PVActuels, c.PVMax, c.ManaActuel, c.ManaMax, len(c.Inventaire), MaxInventaire,
-		afficherEmplacement(c.Equipement.Tete),
-		afficherEmplacement(c.Equipement.Torse),
-		afficherEmplacement(c.Equipement.Pieds))
+	return fmt.Sprintf("{%s, %s lvl %d, PV%d/%d, Inventaire %d/%d, Équipement: Tête: %s | Torse: %s | Pieds: %s}",
+		c.Nom, c.Classe, c.Niveau, c.PVActuels, c.PVMax, len(c.Inventaire), MaxInventaire, c.Equipement.Tete, c.Equipement.Torse, c.Equipement.Pieds)
 }
-
-func afficherEmplacement(objet string) string {
-	if objet == "" {
-		return "Aucun"
-	}
-	return objet
-}
-
 func InitCharacter(niveau int, inventaire []string) (Character, error) {
 	if len(inventaire) > MaxInventaire {
 		return Character{}, fmt.Errorf("inventaire trop grand : %d objets fournis, maximum autorisé %d", len(inventaire), MaxInventaire)
@@ -78,7 +65,6 @@ func InitCharacter(niveau int, inventaire []string) (Character, error) {
 	}
 
 	pvMax, pvActuels := pvSelonClasse(classe)
-	manaMax := manaSelonClasse(classe)
 
 	return Character{
 		Nom:        nom,
@@ -86,8 +72,6 @@ func InitCharacter(niveau int, inventaire []string) (Character, error) {
 		Niveau:     niveau,
 		PVMax:      pvMax,
 		PVActuels:  pvActuels,
-		ManaMax:    manaMax,
-		ManaActuel: manaMax,
 		Inventaire: inventaire,
 		Or:         OrDepart,
 		Equipement: Equipment{},
@@ -104,20 +88,6 @@ func pvSelonClasse(classe string) (int, int) {
 	case "humain":
 		return 100, 50
 	default:
-		return 100, 50
-	}
-}
-
-// manaSelonClasse renvoie le mana maximum de départ selon la classe choisie.
-func manaSelonClasse(classe string) int {
-	switch classe {
-	case "elfe":
-		return 120
-	case "nain":
-		return 80
-	case "humain":
-		return 100
-	default:
-		return 100
+		return 100, 50 // valeur de secours, ne devrait jamais arriver
 	}
 }

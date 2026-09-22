@@ -4,8 +4,9 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"scarlet/outils"
 	"strings"
+
+	"scarlet/outils"
 )
 
 // Menu affiche le menu principal du jeu et redirige vers les actions du personnage.
@@ -28,6 +29,7 @@ func (c *Character) Menu() {
 		case "1":
 			outils.ClearScreen()
 			c.DisplayInfo()
+			attendreEntree(lecteur)
 
 		case "2":
 			outils.ClearScreen()
@@ -41,4 +43,10 @@ func (c *Character) Menu() {
 			fmt.Println("Choix invalide.")
 		}
 	}
+}
+
+// attendreEntree met le programme en pause jusqu'à ce que le joueur appuie sur Entrée.
+func attendreEntree(lecteur *bufio.Reader) {
+	fmt.Println("\nAppuyez sur Entrée pour continuer...")
+	lecteur.ReadString('\n')
 }
