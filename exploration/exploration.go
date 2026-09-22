@@ -27,16 +27,24 @@ func Explorer(c *character.Character) {
 			ascii.AfficherASCII("BanqueASCII/entree_village.txt")
 			fmt.Println("\nVous êtes à l'entrée de la ville.")
 			fmt.Println("1. S'engager dans les étroites rues de la ville.")
-			fmt.Println("2. Ouvrir le menu")
+			fmt.Println("0. Ouvrir le menu")
+			if c.QueteMagieNoire > 0 {
+				fmt.Println("2. Explorer la forêt")
+			}
 
 			choix := lireChoix(lecteur)
 			switch choix {
 			case "1":
 				localisation = "rue_principale"
-			case "2":
+			case "0":
 				c.Menu()
+			case "2":
+				if c.QueteMagieNoire > 0 {
+					localisation = "foret"
+				}
 			default:
 				fmt.Println("Choix invalide.")
+
 			}
 
 		case "place_marchande":
@@ -162,9 +170,9 @@ func Explorer(c *character.Character) {
 			outils.ClearScreen()
 			ascii.AfficherASCII("BanqueASCII/haute_ville.txt")
 			fmt.Println("\nLa montée était rude... Mais vous voilà dans les beaux quartiers.")
-			fmt.Println("Autour d'une fontaine se font face l'hôtel de ville et la cathédrale.")
+			fmt.Println("Autour d'une fontaine se font face le manoir ducal et la cathédrale.")
 			fmt.Println("1. Redescendre dans les rues.")
-			fmt.Println("2. Entrer dans l'hôtel de ville.")
+			fmt.Println("2. Entrer dans le manoir.")
 			fmt.Println("3. Pénétrer dans la cathédrale.")
 			fmt.Println("0. Ouvrir le menu")
 
@@ -173,7 +181,7 @@ func Explorer(c *character.Character) {
 			case "1":
 				localisation = "rue_principale"
 			case "2":
-				localisation = "hotel_de_ville"
+				localisation = "manoir"
 			case "3":
 				localisation = "cathedrale"
 			case "0":
@@ -182,28 +190,68 @@ func Explorer(c *character.Character) {
 				fmt.Println("Choix invalide.")
 			}
 
-		case "hotel_de_ville":
+		case "manoir":
 			outils.ClearScreen()
-			ascii.AfficherASCII("BanqueASCII/maire.txt")
-			fmt.Println("\nL'interieur est décoré de boiseries sculptées et de quelques statues de marbre. Vous profitez un instant du feu de cheminée.")
-			fmt.Println("Par les fenêtres, vous entrapercez une vue magnifique sur le reste de la ville !")
-			fmt.Println("Le maire, un homme de petite stature mais richement habillé, se dirige vers vous :")
-			fmt.Println("\"J'espère que appréciez votre séjour parmi nous.\"")
+			ascii.AfficherASCII("BanqueASCII/duc.txt")
+			audio.PlaySound("BanqueSon/NPC/ducbonjour.ogg")
+			fmt.Println("\nL'intérieur est décoré de boiseries sculptées et de quelques statues de marbre. Vous profitez un instant du feu de cheminée.")
+			fmt.Println("Par les fenêtres, vous entrapercevez une vue magnifique sur le reste de la ville !")
+			fmt.Println("Le duc, un homme de petite stature mais au charisme remarquable, se dirige vers vous :")
+			fmt.Println("\"J'espère que vous appréciez votre séjour parmi nous.\"")
 			fmt.Println("1. Le saluer et s'en aller.")
-			fmt.Println("2. Parler au maire.")
+			fmt.Println("2. Parler au duc.")
 			fmt.Println("0. Ouvrir le menu")
 
 			choix := lireChoix(lecteur)
 			switch choix {
 			case "1":
+				audio.PlaySoundBlocking("BanqueSon/NPC/ducbye.ogg")
 				localisation = "haute_ville"
+
 			case "2":
+				if c.QueteMagieNoire == 0 {
+					outils.ClearScreen()
+					ascii.AfficherASCII("BanqueASCII/duc.txt")
+					fmt.Println("\n\"Un tremblement de terre a ébranlé la ville il y a une semaine. D'après mes érudits, il était d'origine magique.\"")
+					fmt.Println("\"Pendant ce temps, une horde de gobelins ravage mes campagnes. La disette menace, et mes sujets commencent à paniquer.\"")
+					fmt.Println("\"Comprenez que je ne peux perdre la face en envoyant ma garde ratisser les champs...\"")
+					fmt.Println("\"Mais vous, vous venez d'arriver... Si vous parvenez à tuer leur chef, la horde devrait se disperser.\"")
+					fmt.Println("\"Vous serez grassement récompensé. Puis-je compter sur votre concours ?\"")
+					fmt.Println("1. Accepter.")
+					fmt.Println("2. Refuser.")
+
+					choixQuete := lireChoix(lecteur)
+					switch choixQuete {
+					case "1":
+						outils.ClearScreen()
+						ascii.AfficherASCII("BanqueASCII/duc.txt")
+						fmt.Println("\nSi vous y parvenez, ma gratitude vous sera acquise. Prenez cette carte, vous en aurez besoin.")
+						c.QueteMagieNoire++
+						attendreEntree(lecteur)
+						audio.PlaySoundBlocking("BanqueSon/NPC/ducbye.ogg")
+						localisation = "haute_ville"
+
+					case "2":
+						outils.ClearScreen()
+						ascii.AfficherASCII("BanqueASCII/duc.txt")
+						fmt.Println("\"Soit. Mais vous feriez bien de rentrer dans mes bonnes grâces...\"")
+						attendreEntree(lecteur)
+						localisation = "haute_ville"
+
+					default:
+						fmt.Println("Choix invalide.")
+					}
+				} else {
+					fmt.Println("\n\"Avez-vous des nouvelles de la horde de gobelins ?\"")
+				}
 
 			case "0":
 				c.Menu()
+
 			default:
 				fmt.Println("Choix invalide.")
 			}
+
 		}
 	}
 }
@@ -213,4 +261,9 @@ func lireChoix(lecteur *bufio.Reader) string {
 	fmt.Print("Votre choix : ")
 	saisie, _ := lecteur.ReadString('\n')
 	return strings.TrimSpace(saisie)
+}
+
+func attendreEntree(lecteur *bufio.Reader) {
+	fmt.Println("\nAppuyez sur Entrée pour continuer...")
+	lecteur.ReadString('\n')
 }

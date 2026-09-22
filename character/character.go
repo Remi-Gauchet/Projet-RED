@@ -29,6 +29,7 @@ type Character struct {
 	Or                int
 	Sorts             []string
 	Equipement        Equipment
+	QueteMagieNoire   int
 }
 
 func (c Character) String() string {
