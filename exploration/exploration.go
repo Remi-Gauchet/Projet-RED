@@ -9,6 +9,7 @@ import (
 	"scarlet/ascii"
 	"scarlet/audio"
 	"scarlet/character"
+	"scarlet/forge"
 	"scarlet/marchand"
 	"scarlet/outils"
 )
@@ -82,11 +83,12 @@ func Explorer(c *character.Character) {
 			default:
 				fmt.Println("Choix invalide.")
 			}
+
 		case "forge":
 			outils.ClearScreen()
 			ascii.AfficherASCII("BanqueASCII/forgeron.txt")
-			fmt.Println("\nVous êtes dans la forge.")
 			audio.PlaySound("BanqueSon/NPC/forgeron.ogg")
+			fmt.Println("\nVous êtes dans la forge.")
 			fmt.Println("Le forgeron vous dit : Que puis-je faire pour vous ?")
 			fmt.Println("1. Fabriquer un objet")
 			fmt.Println("2. Sortir de la forge")
@@ -94,13 +96,14 @@ func Explorer(c *character.Character) {
 			choix := lireChoix(lecteur)
 			switch choix {
 			case "1":
-				fmt.Println("\n[Fonctionnalité à venir : fabrication d'objets]")
+				forge.Fabriquer(c)
 			case "2":
 				audio.PlaySoundBlocking("BanqueSon/NPC/forgeronbye.ogg")
 				localisation = "place_marchande"
 			default:
 				fmt.Println("Choix invalide.")
 			}
+
 		}
 	}
 }
