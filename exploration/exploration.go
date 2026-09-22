@@ -44,7 +44,8 @@ func Explorer(c *character.Character) {
 			fmt.Println("\nVous êtes sur la place marchande.")
 			fmt.Println("1. Retourner à l'entrée du village")
 			fmt.Println("2. Entrer dans l'échoppe du marchand")
-			fmt.Println("3. Ouvrir le menu")
+			fmt.Println("3. Rentrer dans la forge")
+			fmt.Println("4. Ouvrir le menu")
 
 			choix := lireChoix(lecteur)
 			switch choix {
@@ -53,6 +54,8 @@ func Explorer(c *character.Character) {
 			case "2":
 				localisation = "echoppe_marchand"
 			case "3":
+				localisation = "forge"
+			case "4":
 				c.Menu()
 			default:
 				fmt.Println("Choix invalide.")
@@ -69,12 +72,31 @@ func Explorer(c *character.Character) {
 			choix := lireChoix(lecteur)
 			switch choix {
 			case "1":
-				audio.PlaySound("BanqueSon/NPC/vendeurbye.ogg")
+				audio.PlaySoundBlocking("BanqueSon/NPC/vendeurbye.ogg")
 				localisation = "place_marchande"
 			case "2":
 				marchand.Echoppe(c)
 			case "3":
 				c.Menu()
+			default:
+				fmt.Println("Choix invalide.")
+			}
+		case "forge":
+			outils.ClearScreen()
+			ascii.AfficherASCII("BanqueASCII/forgeron.txt")
+			fmt.Println("\nVous êtes dans la forge.")
+			audio.PlaySound("BanqueSon/NPC/forgeron.ogg")
+			fmt.Println("Le forgeron vous dit : Que puis-je faire pour vous ?")
+			fmt.Println("1. Fabriquer un objet")
+			fmt.Println("2. Sortir de la forge")
+
+			choix := lireChoix(lecteur)
+			switch choix {
+			case "1":
+				fmt.Println("\n[Fonctionnalité à venir : fabrication d'objets]")
+			case "2":
+				audio.PlaySoundBlocking("BanqueSon/NPC/forgeronbye.ogg")
+				localisation = "place_marchande"
 			default:
 				fmt.Println("Choix invalide.")
 			}
