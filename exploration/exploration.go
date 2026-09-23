@@ -354,11 +354,6 @@ func Explorer(c *character.Character) {
 		case "champs_2":
 			outils.ClearScreen()
 			ascii.AfficherASCII("BanqueASCII/champs_2.txt")
-			fmt.Println("")
-			fmt.Println("")
-			fmt.Println("")
-			fmt.Println("0. Ouvrir le menu.")
-
 			lignes := []string{
 				"Vous voici à un embranchement. Vous entendez des bruits dans les hautes herbes...",
 				"1. Vous diriger vers la ferme.",
@@ -390,6 +385,10 @@ func Explorer(c *character.Character) {
 			default:
 				fmt.Println("Choix invalide.")
 			}
+		case "ferme":
+			outils.ClearScreen()
+			ascii.AfficherASCII("BanqueASCII/ferme.txt")
+
 		}
 	}
 }
