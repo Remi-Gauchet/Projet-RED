@@ -136,7 +136,6 @@ func afficherASCIIBrut(chemin string) {
 	}
 }
 
-// encadrerLignes génère les lignes d'une boîte fermée pour une colonne
 func encadrerLignes(lignes []string, largeur int) []string {
 	var res []string
 	res = append(res, "┌"+strings.Repeat("─", largeur)+"┐")
@@ -155,19 +154,25 @@ func encadrerLignes(lignes []string, largeur int) []string {
 	return res
 }
 
-// AfficherArene affiche à gauche le Joueur (Image + PV + Actions encadrées)
-// et à droite le Monstre (Image + PV + Attaques encadrées)
 func AfficherArene(c *character.Character, m *Monstre) {
 	// 1. Partie visuelle du Joueur (gauche)
 	imgJoueur := chargerLignes("BanqueASCII/" + c.Classe + ".txt")
-	actionsJoueur := []string{"1. Coup Risqué (50%, 20 deg)", "2. Frappe Rapide (10 deg)", "3. Potion de soins"}
-	for _, sort := range c.Sorts {
-		actionsJoueur = append(actionsJoueur, fmt.Sprintf("- %s (%d mana)", sort, coutMana[sort]))
+	actionsJoueur := []string{
+		"1. Coup Risqué (50%, 20 deg)",
+		"2. Frappe Rapide (10 deg)",
+		"3. Potion de soins",
+	}
+
+	if c.Niveau >= 2 {
+		actionsJoueur = append(actionsJoueur, "4. Coup Assommant (20 deg, 40% stun)")
+		actionsJoueur = append(actionsJoueur, "5. Lancer un sort")
+	} else {
+		actionsJoueur = append(actionsJoueur, "4. Lancer un sort")
 	}
 
 	var gauche []string
 	gauche = append(gauche, imgJoueur...)
-	gauche = append(gauche, fmt.Sprintf(" %s", c.Nom))
+	gauche = append(gauche, fmt.Sprintf(" %s (Niveau %d)", c.Nom, c.Niveau))
 	gauche = append(gauche, fmt.Sprintf(" PV : %d/%d | Mana : %d/%d", c.PVActuels, c.PVMax, c.ManaActuel, c.ManaMax))
 	gauche = append(gauche, "")
 	gauche = append(gauche, " Actions :")
@@ -205,7 +210,6 @@ func AfficherArene(c *character.Character, m *Monstre) {
 			strDroite = droite[i]
 		}
 
-		// Conservation de l'alignement précis malgré les caractères spé
 		padG := largeurColonne - utf8.RuneCountInString(strGauche)
 		if padG < 0 {
 			padG = 0
@@ -348,31 +352,31 @@ func TourJoueur(c *character.Character, monstre *Monstre, lecteur *bufio.Reader)
 			return
 
 		case "4":
-			if len(c.Sorts) == 0 {
-				fmt.Println("Choix invalide.")
-				time.Sleep(1 * time.Second)
-				continue
-			}
-			fmt.Println("\nSorts connus :")
-			for i, sort := range c.Sorts {
-				fmt.Printf("%d. %s (coût : %d mana)\n", i+1, sort, coutMana[sort])
-			}
-			fmt.Print("Quel sort voulez-vous lancer ? ")
+			if c.Niveau >= 2 {
+				degats := 20 * c.Niveau
+				monstre.PVActuels -= degats
+				if monstre.PVActuels < 0 {
+					monstre.PVActuels = 0
+				}
+				fmt.Printf("\n%s utilise Coup Assommant et inflige %d dégâts !\n", c.Nom, degats)
 
-			choixSort, _ := lecteur.ReadString('\n')
-			choixSort = strings.TrimSpace(choixSort)
-
-			num, err := strconv.Atoi(choixSort)
-			if err != nil || num < 1 || num > len(c.Sorts) {
-				fmt.Println("Choix invalide.")
-				time.Sleep(1 * time.Second)
-				continue
-			}
-
-			if lancerSort(c, monstre, c.Sorts[num-1]) {
-				time.Sleep(500 * time.Millisecond)
+				if rand.Intn(100) < 40 {
+					monstre.ToursGeles = 1
+					fmt.Printf("🎯 %s est assommé pour 1 tour !\n", monstre.Nom)
+				}
+				time.Sleep(1500 * time.Millisecond)
 				return
 			}
+			// Si niveau 1, la touche 4 est "Lancer un sort"
+			gererMenuSorts(c, monstre, lecteur)
+			return
+
+		case "5":
+			if c.Niveau >= 2 {
+				gererMenuSorts(c, monstre, lecteur)
+				return
+			}
+			fmt.Println("Choix invalide.")
 			time.Sleep(1 * time.Second)
 
 		default:
@@ -380,6 +384,32 @@ func TourJoueur(c *character.Character, monstre *Monstre, lecteur *bufio.Reader)
 			time.Sleep(1 * time.Second)
 		}
 	}
+}
+
+func gererMenuSorts(c *character.Character, monstre *Monstre, lecteur *bufio.Reader) {
+	if len(c.Sorts) == 0 {
+		fmt.Println("Aucun sort connu.")
+		time.Sleep(1 * time.Second)
+		return
+	}
+	fmt.Println("\nSorts connus :")
+	for i, sort := range c.Sorts {
+		fmt.Printf("%d. %s (coût : %d mana)\n", i+1, sort, coutMana[sort])
+	}
+	fmt.Print("Quel sort voulez-vous lancer ? ")
+
+	choixSort, _ := lecteur.ReadString('\n')
+	choixSort = strings.TrimSpace(choixSort)
+
+	num, err := strconv.Atoi(choixSort)
+	if err != nil || num < 1 || num > len(c.Sorts) {
+		fmt.Println("Choix invalide.")
+		time.Sleep(1 * time.Second)
+		return
+	}
+
+	lancerSort(c, monstre, c.Sorts[num-1])
+	time.Sleep(500 * time.Millisecond)
 }
 
 // ----------------------------------------------------------------------------
@@ -444,7 +474,20 @@ func Combattre(c *character.Character, monstre Monstre) bool {
 			outils.ClearScreen()
 			AfficherArene(c, &monstre)
 			fmt.Printf("\n🎉 Félicitations ! Vous avez vaincu %s !\n", monstre.Nom)
-			time.Sleep(2 * time.Second)
+
+			// Gain du Niveau 2 automatique au premier Gobelin tué
+			if c.Niveau == 1 && strings.Contains(strings.ToLower(monstre.Nom), "gobelin") {
+				c.Niveau = 2
+				c.PVMax *= 2
+				c.PVActuels = c.PVMax
+				c.ManaMax *= 2
+				c.ManaActuel = c.ManaMax
+				fmt.Println("\n🌟 VOUS PASSEZ NIVEAU 2 !")
+				fmt.Println("-> Vos dégâts et soins sont désormais doublés !")
+				fmt.Println("-> Nouvelle attaque débloquée : Coup Assommant !")
+			}
+
+			time.Sleep(3 * time.Second)
 			break
 		}
 
