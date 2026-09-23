@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"unicode/utf8"
 
 	"scarlet/audio"
 	"scarlet/character"
@@ -37,6 +38,7 @@ type Monstre struct {
 // INITIALISATION DES MONSTRES
 // ----------------------------------------------------------------------------
 
+// InitGobelin crée le gobelin d'entrainement.
 func InitGobelin() Monstre {
 	return Monstre{
 		Nom:          "Gobelin d'entrainement",
@@ -53,10 +55,11 @@ func InitGobelin() Monstre {
 	}
 }
 
+// InitRoiGobelin crée le Roi Gobelin, plus puissant que le gobelin de base.
 func InitRoiGobelin() Monstre {
 	return Monstre{
 		Nom:          "Roi Gobelin",
-		FichierASCII: "roi_gobelin.txt", // <-- à vérifier
+		FichierASCII: "roi_gobelin.txt",
 		PVMax:        90,
 		PVActuels:    90,
 		Attaques: []Attaque{
@@ -69,10 +72,11 @@ func InitRoiGobelin() Monstre {
 	}
 }
 
+// InitDemon crée le Démon, monstre de milieu de jeu.
 func InitDemon() Monstre {
 	return Monstre{
 		Nom:          "Démon",
-		FichierASCII: "demon.txt", // <-- à vérifier
+		FichierASCII: "demon.txt",
 		PVMax:        150,
 		PVActuels:    150,
 		Attaques: []Attaque{
@@ -85,10 +89,11 @@ func InitDemon() Monstre {
 	}
 }
 
+// InitDragon crée le Dragon, boss le plus puissant du trio.
 func InitDragon() Monstre {
 	return Monstre{
 		Nom:          "Dragon",
-		FichierASCII: "dragon.txt", // <-- à vérifier
+		FichierASCII: "dragon.txt",
 		PVMax:        250,
 		PVActuels:    250,
 		Attaques: []Attaque{
@@ -101,6 +106,7 @@ func InitDragon() Monstre {
 	}
 }
 
+// choisirAttaque tire une attaque au hasard selon les probabilités définies.
 func choisirAttaque(attaques []Attaque) Attaque {
 	tirage := rand.Intn(100)
 	cumul := 0
@@ -119,7 +125,7 @@ func choisirAttaque(attaques []Attaque) Attaque {
 // ----------------------------------------------------------------------------
 
 const largeurColonne = 40 // largeur du bloc joueur (gauche) et du bloc monstre (droite)
-const largeurBoite = 90   // largeur intérieure des rectangles (arène + menus)
+const largeurBoite = 90   // largeur intérieure totale du rectangle
 
 func chargerLignes(chemin string) []string {
 	data, err := os.ReadFile(chemin)
@@ -133,6 +139,22 @@ func afficherASCIIBrut(chemin string) {
 	for _, ligne := range chargerLignes(chemin) {
 		fmt.Println(ligne)
 	}
+}
+
+// encadrer affiche une liste de lignes à l'intérieur d'un rectangle façon
+// écran de combat Undertale.
+func encadrer(lignes []string) {
+	fmt.Println("┌" + strings.Repeat("─", largeurBoite+2) + "┐")
+	for _, l := range lignes {
+		rc := utf8.RuneCountInString(l)
+		if rc > largeurBoite {
+			runes := []rune(l)
+			l = string(runes[:largeurBoite])
+			rc = largeurBoite
+		}
+		fmt.Printf("│ %s%s │\n", l, strings.Repeat(" ", largeurBoite-rc))
+	}
+	fmt.Println("└" + strings.Repeat("─", largeurBoite+2) + "┘")
 }
 
 // construireBlocJoueur construit le bloc de gauche : image du joueur, ses PV,
@@ -191,7 +213,7 @@ func AfficherArene(c *character.Character, m *Monstre) {
 		contenu = append(contenu, fmt.Sprintf("%-*s   %s", largeurColonne, gauche, droite))
 	}
 
-	outils.Encadrer(contenu, largeurBoite)
+	encadrer(contenu)
 }
 
 // ----------------------------------------------------------------------------
@@ -256,14 +278,10 @@ func lancerSort(c *character.Character, monstre *Monstre, nomSort string) bool {
 func TourMonstre(monstre *Monstre, c *character.Character) {
 	outils.ClearScreen()
 	AfficherArene(c, monstre)
-
-	var info []string
-	info = append(info, fmt.Sprintf("Tour de %s", monstre.Nom))
-	info = append(info, "")
+	fmt.Printf("\n--- Tour de %s ---\n", monstre.Nom)
 
 	if monstre.ToursGeles > 0 {
-		info = append(info, fmt.Sprintf("%s est gelé et ne peut pas agir (%d tour(s) restant(s)).", monstre.Nom, monstre.ToursGeles))
-		outils.Encadrer(info, largeurBoite)
+		fmt.Printf("%s est gelé et ne peut pas agir (%d tour(s) restant(s)).\n", monstre.Nom, monstre.ToursGeles)
 		monstre.ToursGeles--
 		time.Sleep(1500 * time.Millisecond)
 		return
@@ -276,9 +294,8 @@ func TourMonstre(monstre *Monstre, c *character.Character) {
 		c.PVActuels = 0
 	}
 
-	info = append(info, fmt.Sprintf("%s utilise %s et inflige %d dégâts à %s.", monstre.Nom, attaque.Nom, attaque.Degats, c.Nom))
-	info = append(info, fmt.Sprintf("%s PV : %d/%d", c.Nom, c.PVActuels, c.PVMax))
-	outils.Encadrer(info, largeurBoite)
+	fmt.Printf("%s utilise %s et inflige %d dégâts à %s.\n", monstre.Nom, attaque.Nom, attaque.Degats, c.Nom)
+	fmt.Printf("%s PV : %d/%d\n", c.Nom, c.PVActuels, c.PVMax)
 	time.Sleep(1500 * time.Millisecond)
 }
 
@@ -290,17 +307,15 @@ func TourJoueur(c *character.Character, monstre *Monstre, lecteur *bufio.Reader)
 	for {
 		outils.ClearScreen()
 		AfficherArene(c, monstre)
+		fmt.Printf("\n--- Tour de %s (%s) ---\n", c.Nom, c.Classe)
 
-		var menu []string
-		menu = append(menu, fmt.Sprintf("Tour de %s (%s)", c.Nom, c.Classe))
-		menu = append(menu, "")
-		menu = append(menu, "1. Coup Risqué (50% de chance, 20 dégâts si réussi)")
-		menu = append(menu, "2. Frappe Rapide (10 dégâts assurés)")
-		menu = append(menu, "3. Utiliser une potion")
+		fmt.Println("\n=== MENU COMBAT ===")
+		fmt.Println("1. Coup Risqué (50% de chance, 20 dégâts si réussi)")
+		fmt.Println("2. Frappe Rapide (10 dégâts assurés)")
+		fmt.Println("3. Utiliser une potion")
 		if len(c.Sorts) > 0 {
-			menu = append(menu, "4. Lancer un sort")
+			fmt.Println("4. Lancer un sort")
 		}
-		outils.Encadrer(menu, largeurBoite)
 		fmt.Print("Choisissez une action : ")
 
 		choix, _ := lecteur.ReadString('\n')
@@ -352,12 +367,10 @@ func TourJoueur(c *character.Character, monstre *Monstre, lecteur *bufio.Reader)
 				time.Sleep(1 * time.Second)
 				continue
 			}
-			var sortsMenu []string
-			sortsMenu = append(sortsMenu, "Sorts connus :")
+			fmt.Println("Sorts connus :")
 			for i, sort := range c.Sorts {
-				sortsMenu = append(sortsMenu, fmt.Sprintf("%d. %s (coût : %d mana)", i+1, sort, coutMana[sort]))
+				fmt.Printf("%d. %s (coût : %d mana)\n", i+1, sort, coutMana[sort])
 			}
-			outils.Encadrer(sortsMenu, largeurBoite)
 			fmt.Print("Quel sort voulez-vous lancer ? ")
 
 			choixSort, _ := lecteur.ReadString('\n')
@@ -390,18 +403,16 @@ func TourJoueur(c *character.Character, monstre *Monstre, lecteur *bufio.Reader)
 const coutResurrection = 10
 
 func GererMort(c *character.Character, lecteur *bufio.Reader) {
-	for {
-		outils.ClearScreen()
-		afficherASCIIBrut("BanqueASCII/mort.txt")
+	outils.ClearScreen()
+	afficherASCIIBrut("BanqueASCII/mort.txt")
+	chemin := "BanqueSon/" + c.Classe + "/mort.ogg"
+	audio.PlaySound(chemin)
 
-		var lignes []string
-		lignes = append(lignes, "Même les rois et les héros finissent par offrir leur sourire le plus")
-		lignes = append(lignes, "misérable à ce monde impitoyable qui contemple leur déchéance avec")
-		lignes = append(lignes, "une indifférence glaciale.")
-		lignes = append(lignes, "")
-		lignes = append(lignes, "1. Ressusciter à l'auberge (Or -10, PV au maximum)")
-		lignes = append(lignes, "2. Quitter le jeu")
-		outils.Encadrer(lignes, largeurBoite)
+	fmt.Println("\nMême les rois et les héros finissent par offrir leur sourire le plus misérable à ce monde impitoyable qui contemple leur déchéance avec une indifférence glaciale.")
+
+	for {
+		fmt.Println("\n1. Ressusciter à l'auberge (Or -10, PV au maximum)")
+		fmt.Println("2. Quitter le jeu")
 		fmt.Print("Votre choix : ")
 
 		choix, _ := lecteur.ReadString('\n')
@@ -415,7 +426,7 @@ func GererMort(c *character.Character, lecteur *bufio.Reader) {
 				c.Or -= coutResurrection
 			}
 			c.PVActuels = c.PVMax
-			fmt.Printf("\nVous reprenez connaissance à l'auberge, en pleine forme. (Or restant : %d)\n", c.Or)
+			fmt.Printf("\nUne lumière aveuglante vous illumine. Vous réapparaissez dans la cathédrale, le prêtre vous aide à vous relever. (Or restant : %d)\n", c.Or)
 			return
 
 		case "2":
@@ -424,7 +435,6 @@ func GererMort(c *character.Character, lecteur *bufio.Reader) {
 
 		default:
 			fmt.Println("Choix invalide.")
-			time.Sleep(1 * time.Second)
 		}
 	}
 }
@@ -433,7 +443,8 @@ func GererMort(c *character.Character, lecteur *bufio.Reader) {
 // BOUCLE PRINCIPALE DE COMBAT (GÉNÉRIQUE, TOUS MONSTRES)
 // ----------------------------------------------------------------------------
 
-func Combattre(c *character.Character, monstre Monstre) {
+// Combattre gère le déroulé d'un combat. Renvoie true si le joueur est mort pendant ce combat.
+func Combattre(c *character.Character, monstre Monstre) bool {
 	lecteur := bufio.NewReader(os.Stdin)
 
 	outils.ClearScreen()
@@ -462,21 +473,28 @@ func Combattre(c *character.Character, monstre Monstre) {
 
 	if c.PVActuels <= 0 {
 		GererMort(c, lecteur)
+		return true
 	}
+
+	return false
 }
 
+// TrainingFight : combat d'entrainement contre le gobelin.
 func TrainingFight(c *character.Character) {
 	Combattre(c, InitGobelin())
 }
 
+// AffronterRoiGobelin : combat contre le Roi Gobelin.
 func AffronterRoiGobelin(c *character.Character) {
 	Combattre(c, InitRoiGobelin())
 }
 
+// AffronterDemon : combat contre le Démon.
 func AffronterDemon(c *character.Character) {
 	Combattre(c, InitDemon())
 }
 
+// AffronterDragon : combat contre le Dragon.
 func AffronterDragon(c *character.Character) {
 	Combattre(c, InitDragon())
 }
@@ -485,23 +503,29 @@ func AffronterDragon(c *character.Character) {
 // LANCEMENT PAR NOM DE MONSTRE
 // ----------------------------------------------------------------------------
 
-func Lancer(nomMonstre string, c *character.Character) error {
+// Lancer déclenche un combat contre le monstre désigné par son nom (insensible
+// à la casse). Renvoie true si le joueur est mort pendant ce combat.
+// Exemples : combat.Lancer("gobelin", c), combat.Lancer("dragon", c)
+func Lancer(nomMonstre string, c *character.Character) (bool, error) {
+	var mort bool
+
 	switch strings.ToLower(strings.TrimSpace(nomMonstre)) {
 	case "gobelin":
 		audio.PlayMusic("BanqueSon/musique/anciencombat.ogg")
-		Combattre(c, InitGobelin())
+		mort = Combattre(c, InitGobelin())
 	case "roi gobelin", "roigobelin", "roi_gobelin":
 		audio.PlayMusic("BanqueSon/musique/anciencombat.ogg")
-		Combattre(c, InitRoiGobelin())
+		mort = Combattre(c, InitRoiGobelin())
 	case "demon", "démon":
 		audio.PlayMusic("BanqueSon/musique/incendie.ogg")
-		Combattre(c, InitDemon())
+		mort = Combattre(c, InitDemon())
 	case "dragon":
 		audio.PlayMusic("BanqueSon/musique/cataclysme.ogg")
-		Combattre(c, InitDragon())
+		mort = Combattre(c, InitDragon())
 	default:
-		return fmt.Errorf("monstre inconnu : '%s'", nomMonstre)
+		return false, fmt.Errorf("monstre inconnu : '%s'", nomMonstre)
 	}
+
 	audio.PlayMusic("BanqueSon/musique/ambiance.ogg")
-	return nil
+	return mort, nil
 }
