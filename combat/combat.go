@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"unicode/utf8"
 
 	"scarlet/character"
 	"scarlet/outils"
@@ -122,7 +123,8 @@ func choisirAttaque(attaques []Attaque) Attaque {
 // AFFICHAGE ASCII
 // ----------------------------------------------------------------------------
 
-const largeurColonne = 40
+const largeurColonne = 40 // largeur du bloc joueur (gauche) et du bloc monstre (droite)
+const largeurBoite = 90   // largeur intérieure totale du rectangle
 
 func chargerLignes(chemin string) []string {
 	data, err := os.ReadFile(chemin)
@@ -138,31 +140,79 @@ func afficherASCIIBrut(chemin string) {
 	}
 }
 
-// AfficherArene affiche le joueur à gauche et le monstre à droite, avec leurs PV.
-func AfficherArene(c *character.Character, m *Monstre) {
-	lignesJoueur := chargerLignes("BanqueASCII/" + c.Classe + ".txt")
-	lignesMonstre := chargerLignes("BanqueASCII/" + m.FichierASCII)
+// encadrer affiche une liste de lignes à l'intérieur d'un rectangle façon
+// écran de combat Undertale.
+func encadrer(lignes []string) {
+	fmt.Println("┌" + strings.Repeat("─", largeurBoite+2) + "┐")
+	for _, l := range lignes {
+		rc := utf8.RuneCountInString(l)
+		if rc > largeurBoite {
+			runes := []rune(l)
+			l = string(runes[:largeurBoite])
+			rc = largeurBoite
+		}
+		fmt.Printf("│ %s%s │\n", l, strings.Repeat(" ", largeurBoite-rc))
+	}
+	fmt.Println("└" + strings.Repeat("─", largeurBoite+2) + "┘")
+}
 
-	maxLignes := len(lignesJoueur)
-	if len(lignesMonstre) > maxLignes {
-		maxLignes = len(lignesMonstre)
+// construireBlocJoueur construit le bloc de gauche : image du joueur, ses PV,
+// puis la liste de ses actions possibles en combat.
+func construireBlocJoueur(c *character.Character) []string {
+	bloc := chargerLignes("BanqueASCII/" + c.Classe + ".txt")
+	bloc = append(bloc, "")
+	bloc = append(bloc, c.Nom)
+	bloc = append(bloc, fmt.Sprintf("PV : %d/%d", c.PVActuels, c.PVMax))
+	bloc = append(bloc, "")
+	bloc = append(bloc, "Actions possibles :")
+	bloc = append(bloc, "- Coup Risqué (50% de chances, 20 dégâts)")
+	bloc = append(bloc, "- Frappe Rapide (10 dégâts)")
+	for _, sort := range c.Sorts {
+		bloc = append(bloc, fmt.Sprintf("- %s (coût : %d mana)", sort, coutMana[sort]))
+	}
+	return bloc
+}
+
+// construireBlocMonstre construit le bloc de droite : image du monstre, ses
+// PV, puis la liste de ses attaques possibles.
+func construireBlocMonstre(m *Monstre) []string {
+	bloc := chargerLignes("BanqueASCII/" + m.FichierASCII)
+	bloc = append(bloc, "")
+	bloc = append(bloc, m.Nom)
+	bloc = append(bloc, fmt.Sprintf("PV : %d/%d", m.PVActuels, m.PVMax))
+	bloc = append(bloc, "")
+	bloc = append(bloc, "Attaques possibles :")
+	for _, a := range m.Attaques {
+		bloc = append(bloc, fmt.Sprintf("- %s (%d%% de chances, %d dégâts)", a.Nom, a.Chance, a.Degats))
+	}
+	return bloc
+}
+
+// AfficherArene construit le bloc joueur et le bloc monstre, les fusionne
+// ligne par ligne à la même hauteur, puis affiche le tout dans un rectangle.
+func AfficherArene(c *character.Character, m *Monstre) {
+	blocJoueur := construireBlocJoueur(c)
+	blocMonstre := construireBlocMonstre(m)
+
+	maxLignes := len(blocJoueur)
+	if len(blocMonstre) > maxLignes {
+		maxLignes = len(blocMonstre)
 	}
 
-	fmt.Printf("%-*s   %s\n", largeurColonne, c.Nom, m.Nom)
-	fmt.Printf("%-*s   PV : %d/%d\n", largeurColonne, fmt.Sprintf("PV : %d/%d", c.PVActuels, c.PVMax), m.PVActuels, m.PVMax)
-	fmt.Println()
-
+	var contenu []string
 	for i := 0; i < maxLignes; i++ {
 		gauche := ""
-		if i < len(lignesJoueur) {
-			gauche = lignesJoueur[i]
+		if i < len(blocJoueur) {
+			gauche = blocJoueur[i]
 		}
 		droite := ""
-		if i < len(lignesMonstre) {
-			droite = lignesMonstre[i]
+		if i < len(blocMonstre) {
+			droite = blocMonstre[i]
 		}
-		fmt.Printf("%-*s   %s\n", largeurColonne, gauche, droite)
+		contenu = append(contenu, fmt.Sprintf("%-*s   %s", largeurColonne, gauche, droite))
 	}
+
+	encadrer(contenu)
 }
 
 // ----------------------------------------------------------------------------
@@ -222,7 +272,6 @@ func lancerSort(c *character.Character, monstre *Monstre, nomSort string) bool {
 // TOUR DU MONSTRE
 // ----------------------------------------------------------------------------
 
-// TourMonstre efface l'écran, réaffiche l'arène, puis joue l'action du monstre.
 func TourMonstre(monstre *Monstre, c *character.Character) {
 	outils.ClearScreen()
 	AfficherArene(c, monstre)
@@ -251,8 +300,6 @@ func TourMonstre(monstre *Monstre, c *character.Character) {
 // TOUR DU JOUEUR
 // ----------------------------------------------------------------------------
 
-// TourJoueur efface l'écran et réaffiche l'arène à chaque nouvelle tentative
-// (menu affiché ou choix invalide), pour ne jamais empiler les infos.
 func TourJoueur(c *character.Character, monstre *Monstre, lecteur *bufio.Reader) {
 	for {
 		outils.ClearScreen()
@@ -390,8 +437,6 @@ func GererMort(c *character.Character, lecteur *bufio.Reader) {
 // BOUCLE PRINCIPALE DE COMBAT (GÉNÉRIQUE, TOUS MONSTRES)
 // ----------------------------------------------------------------------------
 
-// Combattre lance un combat entre le personnage et n'importe quel monstre.
-// Exemples : combat.Combattre(c, combat.InitRoiGobelin())
 func Combattre(c *character.Character, monstre Monstre) {
 	lecteur := bufio.NewReader(os.Stdin)
 
@@ -444,6 +489,12 @@ func AffronterDragon(c *character.Character) {
 	Combattre(c, InitDragon())
 }
 
+// ----------------------------------------------------------------------------
+// LANCEMENT PAR NOM DE MONSTRE
+// ----------------------------------------------------------------------------
+
+// Lancer déclenche un combat contre le monstre désigné par son nom (insensible
+// à la casse). Exemples : combat.Lancer("gobelin", c), combat.Lancer("dragon", c)
 func Lancer(nomMonstre string, c *character.Character) error {
 	switch strings.ToLower(strings.TrimSpace(nomMonstre)) {
 	case "gobelin":
