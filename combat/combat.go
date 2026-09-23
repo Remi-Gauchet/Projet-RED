@@ -33,13 +33,16 @@ type Monstre struct {
 }
 
 // ----------------------------------------------------------------------------
-// INITIALISATION DU GOBELIN
+// INITIALISATION DES MONSTRES
 // ----------------------------------------------------------------------------
 
+// InitGobelin crée le gobelin d'entrainement.
+// D'autres fonctions InitXxx() du même type pourront être ajoutées plus tard
+// pour de nouveaux monstres (loup, troll, etc.), sans toucher au reste du code.
 func InitGobelin() Monstre {
 	return Monstre{
 		Nom:          "Gobelin d'entrainement",
-		FichierASCII: "gobelin.txt", // <-- vérifie que ce nom correspond bien au fichier dans BanqueASCII/
+		FichierASCII: "gobelin.txt",
 		PVMax:        40,
 		PVActuels:    40,
 		Attaques: []Attaque{
@@ -67,7 +70,7 @@ func choisirAttaque(attaques []Attaque) Attaque {
 }
 
 // ----------------------------------------------------------------------------
-// AFFICHAGE CÔTE À CÔTE (STYLE POKÉMON)
+// AFFICHAGE ASCII
 // ----------------------------------------------------------------------------
 
 const largeurColonne = 40 // largeur réservée à l'ASCII de gauche, ajuste selon tes fichiers
@@ -79,6 +82,13 @@ func chargerLignes(chemin string) []string {
 		return []string{"[ASCII introuvable : " + chemin + "]"}
 	}
 	return strings.Split(string(data), "\n")
+}
+
+// afficherASCIIBrut affiche un fichier ASCII en pleine largeur (pas de colonnes).
+func afficherASCIIBrut(chemin string) {
+	for _, ligne := range chargerLignes(chemin) {
+		fmt.Println(ligne)
+	}
 }
 
 // AfficherArene affiche le joueur à gauche et le monstre à droite, avec leurs PV,
@@ -122,7 +132,7 @@ var coutMana = map[string]int{
 // lancerSort applique l'effet du sort choisi. Renvoie false si le sort n'a pas
 // pu être lancé (le tour n'est alors pas consommé).
 // La puissance des sorts à dégâts/soin augmente avec le niveau du personnage
-// (multiplicateur = c.Lvl : lvl 1 = x1, lvl 2 = x2, etc.).
+// (multiplicateur = c.Niveau : niveau 1 = x1, niveau 2 = x2, etc.).
 func lancerSort(c *character.Character, monstre *Monstre, nomSort string) bool {
 	cout, existe := coutMana[nomSort]
 	if !existe {
@@ -144,7 +154,6 @@ func lancerSort(c *character.Character, monstre *Monstre, nomSort string) bool {
 		fmt.Printf("\n%s lance Boule de Feu et inflige %d dégâts à %s !\n", c.Nom, degats, monstre.Nom)
 
 	case "Glace":
-		// Effet de statut (gel), pas de dégâts : pas de multiplicateur de niveau ici.
 		monstre.ToursGeles = 2
 		fmt.Printf("\n%s lance Glace ! %s est gelé et ne pourra pas agir pendant 2 tours.\n", c.Nom, monstre.Nom)
 
@@ -198,7 +207,7 @@ func TourMonstre(monstre *Monstre, c *character.Character) {
 // ----------------------------------------------------------------------------
 
 // La puissance des attaques du joueur augmente avec le niveau du personnage
-// (multiplicateur = c.Lvl : lvl 1 = x1, lvl 2 = x2, etc.).
+// (multiplicateur = c.Niveau : niveau 1 = x1, niveau 2 = x2, etc.).
 func TourJoueur(c *character.Character, monstre *Monstre, lecteur *bufio.Reader) {
 	fmt.Printf("\n--- Tour de %s (%s) ---\n", c.Nom, c.Classe)
 
@@ -284,11 +293,57 @@ func TourJoueur(c *character.Character, monstre *Monstre, lecteur *bufio.Reader)
 }
 
 // ----------------------------------------------------------------------------
-// BOUCLE PRINCIPALE DE COMBAT
+// ÉCRAN DE MORT
 // ----------------------------------------------------------------------------
 
-func TrainingFight(c *character.Character) {
-	monstre := InitGobelin()
+const coutResurrection = 10
+
+// GererMort affiche l'écran de mort et propose au joueur de ressusciter à
+// l'auberge (moyennant de l'or, ou tout l'or restant si insuffisant) ou de
+// quitter le jeu.
+func GererMort(c *character.Character, lecteur *bufio.Reader) {
+	outils.ClearScreen()
+	afficherASCIIBrut("BanqueASCII/mort.txt")
+	fmt.Println("\nMême les rois et les héros finissent par offrir leur sourire le plus misérable à ce monde impitoyable qui contemple leur déchéance avec une indifférence glaciale.")
+
+	for {
+		fmt.Println("\n1. Ressusciter à l'auberge (Or -10, PV au maximum)")
+		fmt.Println("2. Quitter le jeu")
+		fmt.Print("Votre choix : ")
+
+		choix, _ := lecteur.ReadString('\n')
+		choix = strings.TrimSpace(choix)
+
+		switch choix {
+		case "1":
+			if c.Or < coutResurrection {
+				c.Or = 0
+			} else {
+				c.Or -= coutResurrection
+			}
+			c.PVActuels = c.PVMax
+			fmt.Printf("\nVous reprenez connaissance à l'auberge, en pleine forme. (Or restant : %d)\n", c.Or)
+			return
+
+		case "2":
+			fmt.Println("\nMerci d'avoir joué. À bientôt !")
+			os.Exit(0)
+
+		default:
+			fmt.Println("Choix invalide.")
+		}
+	}
+}
+
+// ----------------------------------------------------------------------------
+// BOUCLE PRINCIPALE DE COMBAT (GÉNÉRIQUE, TOUS MONSTRES)
+// ----------------------------------------------------------------------------
+
+// Combattre lance un combat entre le personnage et n'importe quel monstre
+// initialisé via une fonction InitXxx(). C'est cette fonction qu'il faudra
+// appeler pour chaque futur monstre, par exemple :
+//   combat.Combattre(c, combat.InitLoup())
+func Combattre(c *character.Character, monstre Monstre) {
 	tour := 1
 	lecteur := bufio.NewReader(os.Stdin)
 
@@ -318,7 +373,13 @@ func TrainingFight(c *character.Character) {
 	}
 
 	if c.PVActuels <= 0 {
-		fmt.Println("Vous êtes ressuscité avec 50% de vos PV max.")
-		c.PVActuels = c.PVMax / 2
+		GererMort(c, lecteur)
 	}
+}
+
+// TrainingFight est un raccourci pour le combat d'entrainement contre le
+// gobelin. Pour de futurs monstres, crée une fonction InitXxx() similaire à
+// InitGobelin() et appelle combat.Combattre(c, combat.InitXxx()) directement.
+func TrainingFight(c *character.Character) {
+	Combattre(c, InitGobelin())
 }
