@@ -443,3 +443,19 @@ func AffronterDemon(c *character.Character) {
 func AffronterDragon(c *character.Character) {
 	Combattre(c, InitDragon())
 }
+
+func Lancer(nomMonstre string, c *character.Character) error {
+	switch strings.ToLower(strings.TrimSpace(nomMonstre)) {
+	case "gobelin":
+		Combattre(c, InitGobelin())
+	case "roi gobelin", "roigobelin", "roi_gobelin":
+		Combattre(c, InitRoiGobelin())
+	case "demon", "démon":
+		Combattre(c, InitDemon())
+	case "dragon":
+		Combattre(c, InitDragon())
+	default:
+		return fmt.Errorf("monstre inconnu : '%s'", nomMonstre)
+	}
+	return nil
+}
