@@ -280,11 +280,18 @@ func Explorer(c *character.Character) {
 				fmt.Println("Choix invalide.")
 			}
 		case "champs":
-			err := combat.Lancer("gobelin", c)
+			outils.ClearScreen()
+
+			mort, err := combat.Lancer("gobelin", c)
 			if err != nil {
 				fmt.Println("Erreur combat :", err)
 			}
-			localisation = "haute_ville"
+
+			if mort {
+				localisation = "cathedrale"
+			} else {
+				localisation = "champs_2"
+			}
 
 		}
 	}

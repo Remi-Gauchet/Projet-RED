@@ -405,6 +405,9 @@ const coutResurrection = 10
 func GererMort(c *character.Character, lecteur *bufio.Reader) {
 	outils.ClearScreen()
 	afficherASCIIBrut("BanqueASCII/mort.txt")
+	chemin := "BanqueSon/" + c.Classe + "/mort.ogg"
+	audio.PlaySound(chemin)
+
 	fmt.Println("\nMême les rois et les héros finissent par offrir leur sourire le plus misérable à ce monde impitoyable qui contemple leur déchéance avec une indifférence glaciale.")
 
 	for {
@@ -423,7 +426,7 @@ func GererMort(c *character.Character, lecteur *bufio.Reader) {
 				c.Or -= coutResurrection
 			}
 			c.PVActuels = c.PVMax
-			fmt.Printf("\nVous reprenez connaissance à l'auberge, en pleine forme. (Or restant : %d)\n", c.Or)
+			fmt.Printf("\nUne lumière aveuglante vous illumine. Vous réapparaissez dans la cathédrale, le prêtre vous aide à vous relever. (Or restant : %d)\n", c.Or)
 			return
 
 		case "2":
@@ -440,7 +443,8 @@ func GererMort(c *character.Character, lecteur *bufio.Reader) {
 // BOUCLE PRINCIPALE DE COMBAT (GÉNÉRIQUE, TOUS MONSTRES)
 // ----------------------------------------------------------------------------
 
-func Combattre(c *character.Character, monstre Monstre) {
+// Combattre gère le déroulé d'un combat. Renvoie true si le joueur est mort pendant ce combat.
+func Combattre(c *character.Character, monstre Monstre) bool {
 	lecteur := bufio.NewReader(os.Stdin)
 
 	outils.ClearScreen()
@@ -469,7 +473,10 @@ func Combattre(c *character.Character, monstre Monstre) {
 
 	if c.PVActuels <= 0 {
 		GererMort(c, lecteur)
+		return true
 	}
+
+	return false
 }
 
 // TrainingFight : combat d'entrainement contre le gobelin.
@@ -497,24 +504,28 @@ func AffronterDragon(c *character.Character) {
 // ----------------------------------------------------------------------------
 
 // Lancer déclenche un combat contre le monstre désigné par son nom (insensible
-// à la casse). Exemples : combat.Lancer("gobelin", c), combat.Lancer("dragon", c)
-func Lancer(nomMonstre string, c *character.Character) error {
+// à la casse). Renvoie true si le joueur est mort pendant ce combat.
+// Exemples : combat.Lancer("gobelin", c), combat.Lancer("dragon", c)
+func Lancer(nomMonstre string, c *character.Character) (bool, error) {
+	var mort bool
+
 	switch strings.ToLower(strings.TrimSpace(nomMonstre)) {
 	case "gobelin":
 		audio.PlayMusic("BanqueSon/musique/anciencombat.ogg")
-		Combattre(c, InitGobelin())
+		mort = Combattre(c, InitGobelin())
 	case "roi gobelin", "roigobelin", "roi_gobelin":
 		audio.PlayMusic("BanqueSon/musique/anciencombat.ogg")
-		Combattre(c, InitRoiGobelin())
+		mort = Combattre(c, InitRoiGobelin())
 	case "demon", "démon":
 		audio.PlayMusic("BanqueSon/musique/incendie.ogg")
-		Combattre(c, InitDemon())
+		mort = Combattre(c, InitDemon())
 	case "dragon":
 		audio.PlayMusic("BanqueSon/musique/cataclysme.ogg")
-		Combattre(c, InitDragon())
+		mort = Combattre(c, InitDragon())
 	default:
-		return fmt.Errorf("monstre inconnu : '%s'", nomMonstre)
+		return false, fmt.Errorf("monstre inconnu : '%s'", nomMonstre)
 	}
+
 	audio.PlayMusic("BanqueSon/musique/ambiance.ogg")
-	return nil
+	return mort, nil
 }
