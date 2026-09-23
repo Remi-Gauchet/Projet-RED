@@ -49,7 +49,7 @@ func Echoppe(c *character.Character) {
 		}
 
 		lignes = append(lignes, "")
-		
+
 		// Options secondaires
 		numVendre := len(catalogue) + 1
 		numUpgrade := len(catalogue) + 2
@@ -60,7 +60,7 @@ func Echoppe(c *character.Character) {
 		lignes = append(lignes, fmt.Sprintf("%d. Quitter la boutique", numQuitter))
 
 		// Encadrer les articles et options avec une largeur de 90
-		outils.Encadrer(lignes, 90)
+		outils.Encadrer(lignes)
 
 		fmt.Print("                                                                    Votre choix : ")
 		choix, _ := lecteur.ReadString('\n')
@@ -119,7 +119,7 @@ func vendre(c *character.Character, lecteur *bufio.Reader) {
 
 	if len(c.Inventaire) == 0 {
 		lignesVide := []string{"Votre inventaire est vide."}
-		outils.Encadrer(lignesVide, 60)
+		outils.Encadrer(lignesVide)
 		attendreEntree(lecteur)
 		return
 	}
@@ -128,7 +128,7 @@ func vendre(c *character.Character, lecteur *bufio.Reader) {
 		"--- Vente d'objets ---",
 		"Votre inventaire : " + strings.Join(c.Inventaire, " - "),
 	}
-	outils.Encadrer(lignesVente, 90)
+	outils.Encadrer(lignesVente)
 
 	fmt.Print("\n                                                                    Quel objet voulez-vous vendre ? ")
 	nom, _ := lecteur.ReadString('\n')

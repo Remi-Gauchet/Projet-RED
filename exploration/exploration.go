@@ -39,7 +39,7 @@ func Explorer(c *character.Character) {
 				lignes = append(lignes, "2. Prendre la route vers les champs.")
 			}
 
-			outils.Encadrer(lignes, largeurCadre)
+			outils.Encadrer(lignes)
 
 			choix := lireChoix(lecteur)
 			switch choix {
@@ -68,7 +68,7 @@ func Explorer(c *character.Character) {
 				"4. Ouvrir le menu",
 			}
 
-			outils.Encadrer(lignes, largeurCadre)
+			outils.Encadrer(lignes)
 
 			choix := lireChoix(lecteur)
 			switch choix {
@@ -97,7 +97,7 @@ func Explorer(c *character.Character) {
 				"3. Ouvrir le menu",
 			}
 
-			outils.Encadrer(lignes, largeurCadre)
+			outils.Encadrer(lignes)
 
 			choix := lireChoix(lecteur)
 			switch choix {
@@ -125,7 +125,7 @@ func Explorer(c *character.Character) {
 				"2. Sortir de la forge",
 			}
 
-			outils.Encadrer(lignes, largeurCadre)
+			outils.Encadrer(lignes)
 
 			choix := lireChoix(lecteur)
 			switch choix {
@@ -153,7 +153,7 @@ func Explorer(c *character.Character) {
 				"0. Ouvrir le menu",
 			}
 
-			outils.Encadrer(lignes, largeurCadre)
+			outils.Encadrer(lignes)
 
 			choix := lireChoix(lecteur)
 			switch choix {
@@ -186,7 +186,7 @@ func Explorer(c *character.Character) {
 				"0. Ouvrir le menu",
 			}
 
-			outils.Encadrer(lignes, largeurCadre)
+			outils.Encadrer(lignes)
 
 			choix := lireChoix(lecteur)
 			switch choix {
@@ -221,7 +221,7 @@ func Explorer(c *character.Character) {
 				"0. Ouvrir le menu",
 			}
 
-			outils.Encadrer(lignes, largeurCadre)
+			outils.Encadrer(lignes)
 
 			choix := lireChoix(lecteur)
 			switch choix {
@@ -251,7 +251,7 @@ func Explorer(c *character.Character) {
 				"0. Ouvrir le menu",
 			}
 
-			outils.Encadrer(lignes, largeurCadre)
+			outils.Encadrer(lignes)
 
 			choix := lireChoix(lecteur)
 			switch choix {
@@ -272,14 +272,14 @@ func Explorer(c *character.Character) {
 						"1. Accepter.",
 						"2. Refuser.",
 					}
-					outils.Encadrer(lignesQuete, largeurCadre)
+					outils.Encadrer(lignesQuete)
 
 					choixQuete := lireChoix(lecteur)
 					switch choixQuete {
 					case "1":
 						outils.ClearScreen()
 						ascii.AfficherASCII("BanqueASCII/duc.txt")
-						outils.Encadrer([]string{"\"Prenez cette carte, vous en aurez besoin.\""}, largeurCadre)
+						outils.Encadrer([]string{"\"Prenez cette carte, vous en aurez besoin.\""})
 						c.QueteMagieNoire++
 						outils.AttendreEntree()
 						audio.PlaySoundBlocking("BanqueSon/NPC/ducbye.ogg")
@@ -288,7 +288,7 @@ func Explorer(c *character.Character) {
 					case "2":
 						outils.ClearScreen()
 						ascii.AfficherASCII("BanqueASCII/duc.txt")
-						outils.Encadrer([]string{"\"Soit. Mais vous feriez bien de rentrer dans mes bonnes grâces...\""}, largeurCadre)
+						outils.Encadrer([]string{"\"Soit. Mais vous feriez bien de rentrer dans mes bonnes grâces...\""})
 						outils.AttendreEntree()
 						localisation = "haute_ville"
 
@@ -296,7 +296,7 @@ func Explorer(c *character.Character) {
 						fmt.Println("Choix invalide.")
 					}
 				} else {
-					outils.Encadrer([]string{"\"Avez-vous des nouvelles de la horde de gobelins ?\""}, largeurCadre)
+					outils.Encadrer([]string{"\"Avez-vous des nouvelles de la horde de gobelins ?\""})
 					outils.AttendreEntree()
 				}
 
@@ -321,7 +321,7 @@ func Explorer(c *character.Character) {
 				"0. Ouvrir le menu.",
 			}
 
-			outils.Encadrer(lignes, largeurCadre)
+			outils.Encadrer(lignes)
 
 			choix := lireChoix(lecteur)
 			switch choix {
@@ -361,7 +361,7 @@ func Explorer(c *character.Character) {
 				"3. Retourner en ville.",
 				"0. Ouvrir le menu.",
 			}
-			outils.Encadrer(lignes, largeurCadre)
+			outils.Encadrer(lignes)
 
 			choix := lireChoix(lecteur)
 			switch choix {
@@ -394,7 +394,7 @@ func Explorer(c *character.Character) {
 					"La ferme est attaquée ! Les paysans se battent avec leurs fourches... Ils ont besoin d'aide !",
 					"Un gobelin plus grand que les autres donne des ordres. Ce doit être leur chef !",
 				}
-				outils.Encadrer(lignesQuete, largeurCadre)
+				outils.Encadrer(lignesQuete)
 				outils.AttendreEntree()
 				mort, err := combat.Lancer("gobelin", c)
 				if err != nil {
@@ -413,7 +413,7 @@ func Explorer(c *character.Character) {
 						"Sur le corps de la bête, vous ramassez un cristal noir, chaud au toucher, qui pulse une énergie malfaisante...",
 						"Le paysan et sa femmme vous serrent la main. Et vous décidez de poursuivre votre route.",
 					}
-					outils.Encadrer(lignesQuete, largeurCadre)
+					outils.Encadrer(lignesQuete)
 					outils.AttendreEntree()
 					localisation = "champs_2"
 				}
@@ -424,7 +424,7 @@ func Explorer(c *character.Character) {
 					"1. Reprendre la route",
 					"0. Ouvrir le menu.",
 				}
-				outils.Encadrer(lignesQuete, largeurCadre)
+				outils.Encadrer(lignesQuete)
 				choix := lireChoix(lecteur)
 				switch choix {
 				case "1":

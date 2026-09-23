@@ -62,7 +62,7 @@ func InitCharacter(niveau int, inventaire []string) (Character, error) {
 	fmt.Print(strings.Repeat("\n", 30))
 
 	lignesNom := []string{"Création de personnage", "", "Entrez le nom de votre personnage :"}
-	outils.Encadrer(lignesNom, 60)
+	outils.Encadrer(lignesNom)
 	fmt.Print("                                                    Votre réponse : ")
 
 	nom, _ := lecteur.ReadString('\n')
@@ -84,7 +84,7 @@ func InitCharacter(niveau int, inventaire []string) (Character, error) {
 			"- Nain",
 			"- Humain",
 		}
-		outils.Encadrer(lignesClasse, 60)
+		outils.Encadrer(lignesClasse)
 		fmt.Print("                                                    Votre choix : ")
 
 		saisie, _ := lecteur.ReadString('\n')
@@ -112,7 +112,7 @@ func InitCharacter(niveau int, inventaire []string) (Character, error) {
 			"Classe invalide !",
 			"Veuillez choisir parmi : elfe, nain, humain.",
 		}
-		outils.Encadrer(lignesErreur, 60)
+		outils.Encadrer(lignesErreur)
 		fmt.Print("\n                                                    Appuyez sur Entrée pour continuer...")
 		lecteur.ReadString('\n')
 	}

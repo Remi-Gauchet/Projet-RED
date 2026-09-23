@@ -26,7 +26,7 @@ func (c *Character) Menu() {
 			"4. Sortir du menu",
 		}
 
-		outils.Encadrer(menuLignes, 45)
+		outils.Encadrer(menuLignes)
 
 		// Exactly 74 spaces before the prompt
 		fmt.Print("                                                                          Entrez le numéro de votre choix : ")

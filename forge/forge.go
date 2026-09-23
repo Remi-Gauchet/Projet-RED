@@ -71,7 +71,7 @@ func Fabriquer(c *character.Character) {
 		lignes = append(lignes, "0. Retour")
 
 		// Encadrer la liste des recettes
-		outils.Encadrer(lignes, 90)
+		outils.Encadrer(lignes)
 
 		fmt.Print("                                                                    Votre choix : ")
 

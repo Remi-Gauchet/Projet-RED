@@ -50,7 +50,7 @@ func (c *Character) AccessInventory() {
 		}
 
 		// Affichage du cadre style Undertale
-		outils.Encadrer(menuLignes, 55)
+		outils.Encadrer(menuLignes)
 
 		fmt.Print("Selon votre choix, tapez le numéro puis entrée : ")
 
@@ -98,7 +98,7 @@ func (c *Character) choisirLivreAApprendre(livres []string, lecteur *bufio.Reade
 		lignes = append(lignes, fmt.Sprintf("%d. %s", i+1, livre))
 	}
 
-	outils.Encadrer(lignes, 55)
+	outils.Encadrer(lignes)
 
 	fmt.Print("Quel livre voulez-vous étudier ? ")
 
