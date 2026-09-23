@@ -119,8 +119,6 @@ var coutMana = map[string]int{
 	"Lumière Divine": 20,
 }
 
-// lancerSort applique l'effet du sort choisi. Renvoie false si le sort n'a pas
-// pu être lancé (le tour n'est alors pas consommé).
 func lancerSort(c *character.Character, monstre *Monstre, nomSort string) bool {
 	cout, existe := coutMana[nomSort]
 	if !existe {
@@ -199,11 +197,10 @@ func TourJoueur(c *character.Character, monstre *Monstre, lecteur *bufio.Reader)
 
 	for {
 		fmt.Println("\n=== MENU COMBAT ===")
-		fmt.Println("1. Coup Risqué (50% de chance, 20 dégâts si réussi)")
-		fmt.Println("2. Frappe Rapide (10 dégâts assurés)")
-		fmt.Println("3. Utiliser une potion")
+		fmt.Println("1. Attaquer")
+		fmt.Println("2. Utiliser une potion")
 		if len(c.Sorts) > 0 {
-			fmt.Println("4. Lancer un sort")
+			fmt.Println("3. Lancer un sort")
 		}
 		fmt.Print("Choisissez une action : ")
 
@@ -212,35 +209,17 @@ func TourJoueur(c *character.Character, monstre *Monstre, lecteur *bufio.Reader)
 
 		switch choix {
 		case "1":
-			fmt.Printf("\n%s tente un Coup Risqué...\n", c.Nom)
-			time.Sleep(500 * time.Millisecond)
-
-			if rand.Intn(2) == 0 {
-				fmt.Println("Raté ! Vous perdez votre tour.")
-			} else {
-				degats := 20
-				monstre.PVActuels -= degats
-				if monstre.PVActuels < 0 {
-					monstre.PVActuels = 0
-				}
-				fmt.Printf("Coup critique ! Vous infligez %d dégâts à %s !\n", degats, monstre.Nom)
-				fmt.Printf("%s PV : %d/%d\n", monstre.Nom, monstre.PVActuels, monstre.PVMax)
-			}
-			time.Sleep(1 * time.Second)
-			return
-
-		case "2":
-			degats := 10
+			degats := 5
 			monstre.PVActuels -= degats
 			if monstre.PVActuels < 0 {
 				monstre.PVActuels = 0
 			}
-			fmt.Printf("\n%s utilise Frappe Rapide et inflige %d dégâts à %s !\n", c.Nom, degats, monstre.Nom)
+			fmt.Printf("\n%s attaque et inflige %d dégâts à %s !\n", c.Nom, degats, monstre.Nom)
 			fmt.Printf("%s PV : %d/%d\n", monstre.Nom, monstre.PVActuels, monstre.PVMax)
 			time.Sleep(1 * time.Second)
 			return
 
-		case "3":
+		case "2":
 			err := c.TakePot()
 			if err != nil {
 				fmt.Println("Erreur :", err)
@@ -248,7 +227,7 @@ func TourJoueur(c *character.Character, monstre *Monstre, lecteur *bufio.Reader)
 			}
 			return
 
-		case "4":
+		case "3":
 			if len(c.Sorts) == 0 {
 				fmt.Println("Choix invalide.")
 				continue
