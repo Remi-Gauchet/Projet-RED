@@ -9,6 +9,7 @@ import (
 	"scarlet/ascii"
 	"scarlet/audio"
 	"scarlet/character"
+	"scarlet/combat"
 	"scarlet/forge"
 	"scarlet/marchand"
 	"scarlet/outils"
@@ -29,7 +30,7 @@ func Explorer(c *character.Character) {
 			fmt.Println("1. S'engager dans les étroites rues de la ville.")
 			fmt.Println("0. Ouvrir le menu")
 			if c.QueteMagieNoire > 0 {
-				fmt.Println("2. Explorer la forêt")
+				fmt.Println("2. Prendre la route vers les champs.")
 			}
 
 			choix := lireChoix(lecteur)
@@ -40,7 +41,7 @@ func Explorer(c *character.Character) {
 				c.Menu()
 			case "2":
 				if c.QueteMagieNoire > 0 {
-					localisation = "foret"
+					localisation = "champs"
 				}
 			default:
 				fmt.Println("Choix invalide.")
@@ -256,6 +257,34 @@ func Explorer(c *character.Character) {
 			default:
 				fmt.Println("Choix invalide.")
 			}
+
+		case "cathedrale":
+			outils.ClearScreen()
+			ascii.AfficherASCII("BanqueASCII/eglise.txt")
+			audio.PlayMusic("BanqueSon/musique/cathedrale.ogg")
+			audio.PlaySound("BanqueSon/NPC/bonjourpretre.ogg")
+			fmt.Println("\nL'athmosphère de la cathédrale est hypnotisante. La lumière traverse les vitreaux et illumine un autel.")
+			fmt.Println("Le prêtre vous adresse une bénédiction :")
+			fmt.Println("\"Que la lumière vous guide, mon enfant. Puisse t-elle vous accompagner dans votre voyage.\"")
+			fmt.Println("1. Sortir de la cathédrale.")
+			fmt.Println("0. Ouvrir le menu.")
+
+			choix := lireChoix(lecteur)
+			switch choix {
+			case "1":
+				audio.PlayMusic("BanqueSon/musique/ambiance.ogg")
+				localisation = "haute_ville"
+			case "0":
+				c.Menu()
+			default:
+				fmt.Println("Choix invalide.")
+			}
+		case "champs":
+			err := combat.Lancer("gobelin", c)
+			if err != nil {
+				fmt.Println("Erreur combat :", err)
+			}
+			localisation = "haute_ville"
 
 		}
 	}
