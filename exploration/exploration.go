@@ -232,7 +232,7 @@ func Explorer(c *character.Character) {
 						ascii.AfficherASCII("BanqueASCII/duc.txt")
 						fmt.Println("\n\"Si vous y parvenez, ma gratitude vous sera acquise. Prenez cette carte, vous en aurez besoin.\"")
 						c.QueteMagieNoire++
-						attendreEntree(lecteur)
+						outils.AttendreEntree()
 						audio.PlaySoundBlocking("BanqueSon/NPC/ducbye.ogg")
 						localisation = "haute_ville"
 
@@ -240,7 +240,7 @@ func Explorer(c *character.Character) {
 						outils.ClearScreen()
 						ascii.AfficherASCII("BanqueASCII/duc.txt")
 						fmt.Println("\"Soit. Mais vous feriez bien de rentrer dans mes bonnes grâces...\"")
-						attendreEntree(lecteur)
+						outils.AttendreEntree()
 						localisation = "haute_ville"
 
 					default:
@@ -266,9 +266,4 @@ func lireChoix(lecteur *bufio.Reader) string {
 	fmt.Print("Votre choix : ")
 	saisie, _ := lecteur.ReadString('\n')
 	return strings.TrimSpace(saisie)
-}
-
-func attendreEntree(lecteur *bufio.Reader) {
-	fmt.Println("\nAppuyez sur Entrée pour continuer...")
-	lecteur.ReadString('\n')
 }
