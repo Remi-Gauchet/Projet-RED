@@ -55,7 +55,14 @@ func InitCharacter(niveau int, inventaire []string) (Character, error) {
 
 	lecteur := bufio.NewReader(os.Stdin)
 
-	fmt.Print("Entrez le nom de votre personnage : ")
+	outils.ClearScreen()
+	// Ajout de 30 lignes de décalage vers le bas
+	fmt.Print(strings.Repeat("\n", 30))
+
+	lignesNom := []string{"Création de personnage", "", "Entrez le nom de votre personnage :"}
+	outils.Encadrer(lignesNom, 60)
+	fmt.Print("                                                                    Votre réponse : ")
+
 	nom, _ := lecteur.ReadString('\n')
 	nom = strings.TrimSpace(nom)
 	nom = piscine.Capitalize(nom)
@@ -64,14 +71,19 @@ func InitCharacter(niveau int, inventaire []string) (Character, error) {
 	var classe string
 
 	for {
-		outils.Encadrer([]string{
+		outils.ClearScreen()
+		// Ajout de 30 lignes de décalage vers le bas
+		fmt.Print(strings.Repeat("\n", 30))
+
+		lignesClasse := []string{
 			"Choisissez votre classe :",
 			"",
-			"- elfe",
-			"- nain",
-			"- humain",
-		}, 40)
-		fmt.Print("Votre choix : ")
+			"- Elfe",
+			"- Nain",
+			"- Humain",
+		}
+		outils.Encadrer(lignesClasse, 60)
+		fmt.Print("                                                                    Votre choix : ")
 
 		saisie, _ := lecteur.ReadString('\n')
 		saisie = strings.TrimSpace(saisie)
@@ -90,7 +102,17 @@ func InitCharacter(niveau int, inventaire []string) (Character, error) {
 			break
 		}
 
-		outils.Encadrer([]string{"Classe invalide. Choisissez parmi : elfe, nain, humain."}, 40)
+		outils.ClearScreen()
+		// Ajout de 30 lignes de décalage vers le bas
+		fmt.Print(strings.Repeat("\n", 30))
+
+		lignesErreur := []string{
+			"Classe invalide !",
+			"Veuillez choisir parmi : elfe, nain, humain.",
+		}
+		outils.Encadrer(lignesErreur, 60)
+		fmt.Print("\n                                                                    Appuyez sur Entrée pour continuer...")
+		lecteur.ReadString('\n')
 	}
 
 	pvMax, pvActuels := pvSelonClasse(classe)

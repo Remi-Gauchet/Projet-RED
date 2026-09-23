@@ -32,6 +32,7 @@ type Monstre struct {
 	PVActuels    int
 	Attaques     []Attaque
 	ToursGeles   int
+	XPAccordee   int
 }
 
 // ----------------------------------------------------------------------------
@@ -51,6 +52,7 @@ func InitGobelin() Monstre {
 			{Nom: "Jet de pierre", Chance: 10, Degats: 20},
 			{Nom: "Cri sauvage", Chance: 5, Degats: 30},
 		},
+		XPAccordee: 0, // Généré aléatoirement (35 à 50) pour les niveaux >= 2
 	}
 }
 
@@ -67,6 +69,7 @@ func InitRoiGobelin() Monstre {
 			{Nom: "Ordre de Massacre", Chance: 10, Degats: 35},
 			{Nom: "Fureur du Roi", Chance: 5, Degats: 45},
 		},
+		XPAccordee: 80,
 	}
 }
 
@@ -83,6 +86,7 @@ func InitDemon() Monstre {
 			{Nom: "Flammes Abyssales", Chance: 15, Degats: 45},
 			{Nom: "Rituel de Douleur", Chance: 5, Degats: 60},
 		},
+		XPAccordee: 150,
 	}
 }
 
@@ -99,6 +103,7 @@ func InitDragon() Monstre {
 			{Nom: "Souffle de Feu", Chance: 15, Degats: 60},
 			{Nom: "Rugissement Dévastateur", Chance: 5, Degats: 80},
 		},
+		XPAccordee: 300,
 	}
 }
 
@@ -174,6 +179,11 @@ func AfficherArene(c *character.Character, m *Monstre) {
 	gauche = append(gauche, imgJoueur...)
 	gauche = append(gauche, fmt.Sprintf(" %s (Niveau %d)", c.Nom, c.Niveau))
 	gauche = append(gauche, fmt.Sprintf(" PV : %d/%d | Mana : %d/%d", c.PVActuels, c.PVMax, c.ManaActuel, c.ManaMax))
+
+	if c.Niveau >= 2 {
+		gauche = append(gauche, fmt.Sprintf(" EXP : %d/%d", c.XP, c.XPMax))
+	}
+
 	gauche = append(gauche, "")
 	gauche = append(gauche, " Actions :")
 	gauche = append(gauche, encadrerLignes(actionsJoueur, largeurBoite)...)
@@ -367,7 +377,6 @@ func TourJoueur(c *character.Character, monstre *Monstre, lecteur *bufio.Reader)
 				time.Sleep(1500 * time.Millisecond)
 				return
 			}
-			// Si niveau 1, la touche 4 est "Lancer un sort"
 			gererMenuSorts(c, monstre, lecteur)
 			return
 
@@ -410,6 +419,49 @@ func gererMenuSorts(c *character.Character, monstre *Monstre, lecteur *bufio.Rea
 
 	lancerSort(c, monstre, c.Sorts[num-1])
 	time.Sleep(500 * time.Millisecond)
+}
+
+// ----------------------------------------------------------------------------
+// GESTION DE L'EXPERIENCE
+// ----------------------------------------------------------------------------
+
+func AjouterXP(c *character.Character, xpGagnee int) {
+	if c.Niveau == 1 {
+		// Passage direct au Niveau 2 pour le premier Gobelin
+		c.Niveau = 2
+		c.XP = 0
+		c.XPMax = 100 // Objectif pour le niveau 3
+		c.PVMax *= 2
+		c.PVActuels = c.PVMax
+		c.ManaMax *= 2
+		c.ManaActuel = c.ManaMax
+		fmt.Println("\n🌟 VOUS PASSEZ NIVEAU 2 !")
+		fmt.Println("-> Vos dégâts et soins sont désormais doublés !")
+		fmt.Println("-> Nouvelle attaque débloquée : Coup Assommant !")
+		return
+	}
+
+	c.XP += xpGagnee
+	fmt.Printf("\n✨ Vous gagnez %d points d'expérience ! (%d/%d EXP)\n", xpGagnee, c.XP, c.XPMax)
+
+	// Verification et montée de niveau
+	for c.XP >= c.XPMax {
+		c.XP -= c.XPMax
+		c.Niveau++
+		
+		// Multiplication du seuil par 1.5
+		c.XPMax = int(float64(c.XPMax) * 1.5)
+
+		c.PVMax += 20
+		c.PVActuels = c.PVMax
+		c.ManaMax += 10
+		c.ManaActuel = c.ManaMax
+
+		fmt.Printf("\n🌟 FELICITATIONS ! Vous passez Niveau %d !\n", c.Niveau)
+		fmt.Printf("-> PV Max augmentés à %d\n", c.PVMax)
+		fmt.Printf("-> Mana Max augmenté à %d\n", c.ManaMax)
+		fmt.Printf("-> Prochain niveau à %d EXP requis !\n", c.XPMax)
+	}
 }
 
 // ----------------------------------------------------------------------------
@@ -475,17 +527,14 @@ func Combattre(c *character.Character, monstre Monstre) bool {
 			AfficherArene(c, &monstre)
 			fmt.Printf("\n🎉 Félicitations ! Vous avez vaincu %s !\n", monstre.Nom)
 
-			// Gain du Niveau 2 automatique au premier Gobelin tué
-			if c.Niveau == 1 && strings.Contains(strings.ToLower(monstre.Nom), "gobelin") {
-				c.Niveau = 2
-				c.PVMax *= 2
-				c.PVActuels = c.PVMax
-				c.ManaMax *= 2
-				c.ManaActuel = c.ManaMax
-				fmt.Println("\n🌟 VOUS PASSEZ NIVEAU 2 !")
-				fmt.Println("-> Vos dégâts et soins sont désormais doublés !")
-				fmt.Println("-> Nouvelle attaque débloquée : Coup Assommant !")
+			var xpGagnee int
+			if strings.Contains(strings.ToLower(monstre.Nom), "gobelin") && !strings.Contains(strings.ToLower(monstre.Nom), "roi") {
+				xpGagnee = rand.Intn(16) + 35 // entre 35 et 50 EXP
+			} else {
+				xpGagnee = monstre.XPAccordee
 			}
+
+			AjouterXP(c, xpGagnee)
 
 			time.Sleep(3 * time.Second)
 			break

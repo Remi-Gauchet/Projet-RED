@@ -20,6 +20,8 @@ type Character struct {
 	Nom               string
 	Classe            string
 	Niveau            int
+	XP                int // <-- Ajout de l'expérience actuelle
+	XPMax             int // <-- Ajout du palier d'expérience
 	PVMax             int
 	PVActuels         int
 	ManaMax           int
@@ -34,8 +36,8 @@ type Character struct {
 }
 
 func (c Character) String() string {
-	return fmt.Sprintf("{%s, %s lvl %d, PV%d/%d, Mana%d/%d, Inventaire %d/%d\nÉquipement: Tête: %s | Torse: %s | Pieds: %s}",
-		c.Nom, c.Classe, c.Niveau, c.PVActuels, c.PVMax, c.ManaActuel, c.ManaMax, len(c.Inventaire), c.InventaireMax,
+	return fmt.Sprintf("{%s, %s lvl %d (XP %d/%d), PV%d/%d, Mana%d/%d, Inventaire %d/%d\nÉquipement: Tête: %s | Torse: %s | Pieds: %s}",
+		c.Nom, c.Classe, c.Niveau, c.XP, c.XPMax, c.PVActuels, c.PVMax, c.ManaActuel, c.ManaMax, len(c.Inventaire), c.InventaireMax,
 		afficherEmplacement(c.Equipement.Tete),
 		afficherEmplacement(c.Equipement.Torse),
 		afficherEmplacement(c.Equipement.Pieds))
@@ -61,7 +63,7 @@ func InitCharacter(niveau int, inventaire []string) (Character, error) {
 
 	lignesNom := []string{"Création de personnage", "", "Entrez le nom de votre personnage :"}
 	outils.Encadrer(lignesNom, 60)
-	fmt.Print("                                                                    Votre réponse : ")
+	fmt.Print("                                                    Votre réponse : ")
 
 	nom, _ := lecteur.ReadString('\n')
 	nom = strings.TrimSpace(nom)
@@ -83,7 +85,7 @@ func InitCharacter(niveau int, inventaire []string) (Character, error) {
 			"- Humain",
 		}
 		outils.Encadrer(lignesClasse, 60)
-		fmt.Print("                                                                    Votre choix : ")
+		fmt.Print("                                                    Votre choix : ")
 
 		saisie, _ := lecteur.ReadString('\n')
 		saisie = strings.TrimSpace(saisie)
@@ -111,7 +113,7 @@ func InitCharacter(niveau int, inventaire []string) (Character, error) {
 			"Veuillez choisir parmi : elfe, nain, humain.",
 		}
 		outils.Encadrer(lignesErreur, 60)
-		fmt.Print("\n                                                                    Appuyez sur Entrée pour continuer...")
+		fmt.Print("\n                                                    Appuyez sur Entrée pour continuer...")
 		lecteur.ReadString('\n')
 	}
 
@@ -122,6 +124,8 @@ func InitCharacter(niveau int, inventaire []string) (Character, error) {
 		Nom:               nom,
 		Classe:            classe,
 		Niveau:            niveau,
+		XP:                0,   // <-- Initialisé à 0
+		XPMax:             100, // <-- Initialisé à 100
 		PVMax:             pvMax,
 		PVActuels:         pvActuels,
 		ManaMax:           manaMax,
