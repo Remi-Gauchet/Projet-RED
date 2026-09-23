@@ -15,6 +15,8 @@ import (
 	"scarlet/outils"
 )
 
+const largeurCadre = 65
+
 // Explorer lance la boucle principale d'exploration du personnage.
 func Explorer(c *character.Character) {
 	lecteur := bufio.NewReader(os.Stdin)
@@ -26,12 +28,18 @@ func Explorer(c *character.Character) {
 		case "entree_village":
 			outils.ClearScreen()
 			ascii.AfficherASCII("BanqueASCII/entree_village.txt")
-			fmt.Println("\nVous êtes à l'entrée de la ville.")
-			fmt.Println("1. S'engager dans les étroites rues de la ville.")
-			fmt.Println("0. Ouvrir le menu")
-			if c.QueteMagieNoire > 0 {
-				fmt.Println("2. Prendre la route vers les champs.")
+
+			lignes := []string{
+				"Vous êtes à l'entrée de la ville.",
+				"",
+				"1. S'engager dans les étroites rues de la ville.",
+				"0. Ouvrir le menu",
 			}
+			if c.QueteMagieNoire > 0 {
+				lignes = append(lignes, "2. Prendre la route vers les champs.")
+			}
+
+			outils.Encadrer(lignes, largeurCadre)
 
 			choix := lireChoix(lecteur)
 			switch choix {
@@ -45,17 +53,22 @@ func Explorer(c *character.Character) {
 				}
 			default:
 				fmt.Println("Choix invalide.")
-
 			}
 
 		case "place_marchande":
 			outils.ClearScreen()
 			ascii.AfficherASCII("BanqueASCII/place_marchande.txt")
-			fmt.Println("\nVous êtes sur la place marchande.")
-			fmt.Println("1. Retourner dans les rues.")
-			fmt.Println("2. Entrer dans l'échoppe du marchand")
-			fmt.Println("3. Rentrer dans la forge")
-			fmt.Println("4. Ouvrir le menu")
+
+			lignes := []string{
+				"Vous êtes sur la place marchande.",
+				"",
+				"1. Retourner dans les rues.",
+				"2. Entrer dans l'échoppe du marchand",
+				"3. Rentrer dans la forge",
+				"4. Ouvrir le menu",
+			}
+
+			outils.Encadrer(lignes, largeurCadre)
 
 			choix := lireChoix(lecteur)
 			switch choix {
@@ -74,11 +87,17 @@ func Explorer(c *character.Character) {
 		case "echoppe_marchand":
 			outils.ClearScreen()
 			ascii.AfficherASCII("BanqueASCII/echoppe.txt")
-			fmt.Println("\nVous voici dans l'échoppe du marchand.")
 			audio.PlaySound("BanqueSon/NPC/vendeur.ogg")
-			fmt.Println("1. Retourner sur la place marchande")
-			fmt.Println("2. Commercer avec le marchand")
-			fmt.Println("3. Ouvrir le menu")
+
+			lignes := []string{
+				"Vous voici dans l'échoppe du marchand.",
+				"",
+				"1. Retourner sur la place marchande",
+				"2. Commercer avec le marchand",
+				"3. Ouvrir le menu",
+			}
+
+			outils.Encadrer(lignes, largeurCadre)
 
 			choix := lireChoix(lecteur)
 			switch choix {
@@ -97,10 +116,16 @@ func Explorer(c *character.Character) {
 			outils.ClearScreen()
 			ascii.AfficherASCII("BanqueASCII/forgeron.txt")
 			audio.PlaySound("BanqueSon/NPC/forgeron.ogg")
-			fmt.Println("\nVous êtes dans la forge.")
-			fmt.Println("Le forgeron vous dit : Que puis-je faire pour vous ?")
-			fmt.Println("1. Fabriquer un objet")
-			fmt.Println("2. Sortir de la forge")
+
+			lignes := []string{
+				"Vous êtes dans la forge.",
+				"Le forgeron vous dit : Que puis-je faire pour vous ?",
+				"",
+				"1. Fabriquer un objet",
+				"2. Sortir de la forge",
+			}
+
+			outils.Encadrer(lignes, largeurCadre)
 
 			choix := lireChoix(lecteur)
 			switch choix {
@@ -116,13 +141,19 @@ func Explorer(c *character.Character) {
 		case "rue_principale":
 			outils.ClearScreen()
 			ascii.AfficherASCII("BanqueASCII/rue_principale.txt")
-			fmt.Println("\nVous arpentez les rues de la ville. Certaines sont gorgées de monde. Et d'autres, de véritables coupe gorge.")
-			fmt.Println("Vous passez à côté d'une enseigne \"Auberge du Cul Tourné\".")
-			fmt.Println("1. Se rendre à l'entrée de la ville.")
-			fmt.Println("2. Se rendre sur la place marchande.")
-			fmt.Println("3. Gravir les marches vers la cathédrale.")
-			fmt.Println("4. Entrer dans l'auberge.")
-			fmt.Println("0. Ouvrir le menu")
+
+			lignes := []string{
+				"Vous arpentez les rues de la ville.",
+				"Vous passez à côté d'une enseigne \"Auberge du Cul Tourné\".",
+				"",
+				"1. Se rendre à l'entrée de la ville.",
+				"2. Se rendre sur la place marchande.",
+				"3. Gravir les marches vers la cathédrale.",
+				"4. Entrer dans l'auberge.",
+				"0. Ouvrir le menu",
+			}
+
+			outils.Encadrer(lignes, largeurCadre)
 
 			choix := lireChoix(lecteur)
 			switch choix {
@@ -145,13 +176,17 @@ func Explorer(c *character.Character) {
 			ascii.AfficherASCII("BanqueASCII/auberge.txt")
 			audio.PlayMusic("BanqueSon/musique/auberge.ogg")
 			audio.PlaySound("BanqueSon/NPC/aubergistebonjour.ogg")
-			fmt.Println("\nÀ peine la porte ouverte, une odeur d'alcool vous submerge. Des nains, partout, éclatent de rire en buvant.")
-			fmt.Println("L'un d'entre eux manque de s'étouffer, et fait couler sa bière sur sa longue barbe.")
-			fmt.Println("Une naine chaleureuse s'avance vers vous avec des pintes de bière :")
-			fmt.Println("\"Bienvenue à l'Auberge du Cul Tourné ! Vous voulez dormir ici ? C'est 5 pièces la chambre.\"")
-			fmt.Println("1. Sortir de l'auberge.")
-			fmt.Println("2. Payer 5 pièces d'or et dormir à l'Auberge du Cul Tourné.")
-			fmt.Println("0. Ouvrir le menu")
+
+			lignes := []string{
+				"Une naine chaleureuse s'avance vers vous :",
+				"\"Bienvenue à l'Auberge ! C'est 5 pièces la chambre.\"",
+				"",
+				"1. Sortir de l'auberge.",
+				"2. Payer 5 pièces d'or et dormir.",
+				"0. Ouvrir le menu",
+			}
+
+			outils.Encadrer(lignes, largeurCadre)
 
 			choix := lireChoix(lecteur)
 			switch choix {
@@ -175,12 +210,18 @@ func Explorer(c *character.Character) {
 		case "haute_ville":
 			outils.ClearScreen()
 			ascii.AfficherASCII("BanqueASCII/haute_ville.txt")
-			fmt.Println("\nLa montée était rude... Mais vous voilà dans les beaux quartiers.")
-			fmt.Println("Autour d'une fontaine se font face le manoir ducal et la cathédrale.")
-			fmt.Println("1. Redescendre dans les rues.")
-			fmt.Println("2. Entrer dans le manoir.")
-			fmt.Println("3. Pénétrer dans la cathédrale.")
-			fmt.Println("0. Ouvrir le menu")
+
+			lignes := []string{
+				"La montée était rude... Vous voilà dans les beaux quartiers.",
+				"Autour d'une fontaine se font face le manoir ducal et la cathédrale.",
+				"",
+				"1. Redescendre dans les rues.",
+				"2. Entrer dans le manoir.",
+				"3. Pénétrer dans la cathédrale.",
+				"0. Ouvrir le menu",
+			}
+
+			outils.Encadrer(lignes, largeurCadre)
 
 			choix := lireChoix(lecteur)
 			switch choix {
@@ -200,13 +241,17 @@ func Explorer(c *character.Character) {
 			outils.ClearScreen()
 			ascii.AfficherASCII("BanqueASCII/duc.txt")
 			audio.PlaySound("BanqueSon/NPC/ducbonjour.ogg")
-			fmt.Println("\nL'intérieur est décoré de boiseries sculptées et de quelques statues de marbre. Vous profitez un instant du feu de cheminée.")
-			fmt.Println("Par les fenêtres, vous entrapercevez une vue magnifique sur le reste de la ville !")
-			fmt.Println("Le duc, un homme de petite stature mais au charisme remarquable, se dirige vers vous :")
-			fmt.Println("\"J'espère que vous appréciez votre séjour parmi nous.\"")
-			fmt.Println("1. Le saluer et s'en aller.")
-			fmt.Println("2. Parler au duc.")
-			fmt.Println("0. Ouvrir le menu")
+
+			lignes := []string{
+				"Le duc se dirige vers vous :",
+				"\"J'espère que vous appréciez votre séjour parmi nous.\"",
+				"",
+				"1. Le saluer et s'en aller.",
+				"2. Parler au duc.",
+				"0. Ouvrir le menu",
+			}
+
+			outils.Encadrer(lignes, largeurCadre)
 
 			choix := lireChoix(lecteur)
 			switch choix {
@@ -218,20 +263,23 @@ func Explorer(c *character.Character) {
 				if c.QueteMagieNoire == 0 {
 					outils.ClearScreen()
 					ascii.AfficherASCII("BanqueASCII/duc.txt")
-					fmt.Println("\n\"Un tremblement de terre a ébranlé la ville il y a une semaine. D'après mes érudits, il était d'origine magique.\"")
-					fmt.Println("\"Pendant ce temps, une horde de gobelins ravage mes campagnes. La disette menace, et mes sujets commencent à paniquer.\"")
-					fmt.Println("\"Comprenez que je ne peux perdre la face en envoyant ma garde ratisser les champs...\"")
-					fmt.Println("\"Mais vous, vous venez d'arriver... Si vous parvenez à tuer leur chef, la horde devrait se disperser.\"")
-					fmt.Println("\"Vous serez grassement récompensé. Puis-je compter sur votre concours ?\"")
-					fmt.Println("1. Accepter.")
-					fmt.Println("2. Refuser.")
+
+					lignesQuete := []string{
+						"\"Un tremblement de terre a ébranlé la ville...\"",
+						"\"Une horde de gobelins ravage mes campagnes.\"",
+						"\"Tuez leur chef et vous serez grassement récompensé.\"",
+						"",
+						"1. Accepter.",
+						"2. Refuser.",
+					}
+					outils.Encadrer(lignesQuete, largeurCadre)
 
 					choixQuete := lireChoix(lecteur)
 					switch choixQuete {
 					case "1":
 						outils.ClearScreen()
 						ascii.AfficherASCII("BanqueASCII/duc.txt")
-						fmt.Println("\n\"Si vous y parvenez, ma gratitude vous sera acquise. Prenez cette carte, vous en aurez besoin.\"")
+						outils.Encadrer([]string{"\"Prenez cette carte, vous en aurez besoin.\""}, largeurCadre)
 						c.QueteMagieNoire++
 						outils.AttendreEntree()
 						audio.PlaySoundBlocking("BanqueSon/NPC/ducbye.ogg")
@@ -240,7 +288,7 @@ func Explorer(c *character.Character) {
 					case "2":
 						outils.ClearScreen()
 						ascii.AfficherASCII("BanqueASCII/duc.txt")
-						fmt.Println("\"Soit. Mais vous feriez bien de rentrer dans mes bonnes grâces...\"")
+						outils.Encadrer([]string{"\"Soit. Mais vous feriez bien de rentrer dans mes bonnes grâces...\""}, largeurCadre)
 						outils.AttendreEntree()
 						localisation = "haute_ville"
 
@@ -248,7 +296,8 @@ func Explorer(c *character.Character) {
 						fmt.Println("Choix invalide.")
 					}
 				} else {
-					fmt.Println("\n\"Avez-vous des nouvelles de la horde de gobelins ?\"")
+					outils.Encadrer([]string{"\"Avez-vous des nouvelles de la horde de gobelins ?\""}, largeurCadre)
+					outils.AttendreEntree()
 				}
 
 			case "0":
@@ -263,11 +312,16 @@ func Explorer(c *character.Character) {
 			ascii.AfficherASCII("BanqueASCII/eglise.txt")
 			audio.PlayMusic("BanqueSon/musique/cathedrale.ogg")
 			audio.PlaySound("BanqueSon/NPC/bonjourpretre.ogg")
-			fmt.Println("\nL'athmosphère de la cathédrale est hypnotisante. La lumière traverse les vitreaux et illumine un autel.")
-			fmt.Println("Le prêtre vous adresse une bénédiction :")
-			fmt.Println("\"Que la lumière vous guide, mon enfant. Puisse t-elle vous accompagner dans votre voyage.\"")
-			fmt.Println("1. Sortir de la cathédrale.")
-			fmt.Println("0. Ouvrir le menu.")
+
+			lignes := []string{
+				"Le prêtre vous adresse une bénédiction :",
+				"\"Que la lumière vous guide, mon enfant.\"",
+				"",
+				"1. Sortir de la cathédrale.",
+				"0. Ouvrir le menu.",
+			}
+
+			outils.Encadrer(lignes, largeurCadre)
 
 			choix := lireChoix(lecteur)
 			switch choix {
@@ -279,6 +333,7 @@ func Explorer(c *character.Character) {
 			default:
 				fmt.Println("Choix invalide.")
 			}
+
 		case "champs":
 			outils.ClearScreen()
 
@@ -292,14 +347,13 @@ func Explorer(c *character.Character) {
 			} else {
 				localisation = "champs_2"
 			}
-
 		}
 	}
 }
 
 // lireChoix lit une ligne tapée par le joueur et la nettoie
 func lireChoix(lecteur *bufio.Reader) string {
-	fmt.Print("Votre choix : ")
+	fmt.Print("\nVotre choix : ")
 	saisie, _ := lecteur.ReadString('\n')
 	return strings.TrimSpace(saisie)
 }
