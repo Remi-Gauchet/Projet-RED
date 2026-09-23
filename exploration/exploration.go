@@ -388,6 +388,53 @@ func Explorer(c *character.Character) {
 		case "ferme":
 			outils.ClearScreen()
 			ascii.AfficherASCII("BanqueASCII/ferme.txt")
+			if c.QueteMagieNoire < 2 {
+				audio.PlaySound("BanqueSon/NPC/hurlement.ogg")
+				lignesQuete := []string{
+					"La ferme est attaquée ! Les paysans se battent avec leurs fourches... Ils ont besoin d'aide !",
+					"Un gobelin plus grand que les autres donne des ordres. Ce doit être leur chef !",
+				}
+				outils.Encadrer(lignesQuete, largeurCadre)
+				outils.AttendreEntree()
+				mort, err := combat.Lancer("gobelin", c)
+				if err != nil {
+					fmt.Println("Erreur combat :", err)
+				}
+				if mort {
+					localisation = "cathedrale"
+				} else {
+					c.QueteMagieNoire++
+					outils.ClearScreen()
+					ascii.AfficherASCII("BanqueASCII/ferme.txt")
+					audio.PlaySound("BanqueSon/NPC/nainbonjour.ogg")
+					lignesQuete := []string{
+						"Les gobelins se dispersent ! La campagne devrait avoir un peu de répit. Un vieux fermier vous approche en s'essuyant le front :",
+						"\"Vindiou ! Ya d'ces bestiaux d'nos jours ! Merci pour l'coup d'main, pour sûr !\"",
+						"Sur le corps de la bête, vous ramassez un cristal noir, chaud au toucher, qui pulse une énergie malfaisante...",
+						"Le paysan et sa femmme vous serrent la main. Et vous décidez de poursuivre votre route.",
+					}
+					outils.Encadrer(lignesQuete, largeurCadre)
+					outils.AttendreEntree()
+					localisation = "champs_2"
+				}
+			} else {
+				audio.PlaySound("BanqueSon/NPC/nainbonjour.ogg")
+				lignesQuete := []string{
+					"Dès qu'ils vous voient arriver, le paysan et sa femme se précipitent pour vous saluer chaleureusement.",
+					"1. Reprendre la route",
+					"0. Ouvrir le menu.",
+				}
+				outils.Encadrer(lignesQuete, largeurCadre)
+				choix := lireChoix(lecteur)
+				switch choix {
+				case "1":
+					localisation = "champs_2"
+				case "0":
+					c.Menu()
+				default:
+					fmt.Println("Choix invalide.")
+				}
+			}
 
 		}
 	}
