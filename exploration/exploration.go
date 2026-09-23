@@ -368,7 +368,7 @@ func Explorer(c *character.Character) {
 			case "1":
 				localisation = "ferme"
 			case "2":
-				mort, err := combat.Lancer("gobelin", c)
+				mort, err := combat.Lancer("RoiGobelin", c)
 				if err != nil {
 					fmt.Println("Erreur combat :", err)
 				}
