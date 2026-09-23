@@ -38,7 +38,9 @@ func Explorer(c *character.Character) {
 			if c.QueteMagieNoire > 0 {
 				lignes = append(lignes, "2. Prendre la route vers les champs.")
 			}
-
+			if c.QueteMagieNoire > 2 {
+				lignes = append(lignes, "3. Se guider à l'aide du cristal traqueur. Chercher la source de magie noire.")
+			}
 			outils.Encadrer(lignes)
 
 			choix := lireChoix(lecteur)
@@ -50,6 +52,10 @@ func Explorer(c *character.Character) {
 			case "2":
 				if c.QueteMagieNoire > 0 {
 					localisation = "champs"
+				}
+			case "3":
+				if c.QueteMagieNoire > 0 {
+					localisation = "grotte"
 				}
 			default:
 				fmt.Println("Choix invalide.")
@@ -311,13 +317,13 @@ func Explorer(c *character.Character) {
 			outils.ClearScreen()
 			ascii.AfficherASCII("BanqueASCII/eglise.txt")
 			audio.PlayMusic("BanqueSon/musique/cathedrale.ogg")
-			audio.PlaySound("BanqueSon/NPC/bonjourpretre.ogg")
 
 			lignes := []string{
-				"Le prêtre vous adresse une bénédiction :",
-				"\"Que la lumière vous guide, mon enfant.\"",
-				"",
+				"L'interieur de la cathédrale est grandiose !",
+				"La lumière ruisselle à travers les vitraux et retombe sur un autel immaculé.",
+				"Dans l'allée, le prêtre passe le balai sur le sol recouvert de pétales de roses.",
 				"1. Sortir de la cathédrale.",
+				"2. S'adresser au prêtre.",
 				"0. Ouvrir le menu.",
 			}
 
@@ -332,6 +338,56 @@ func Explorer(c *character.Character) {
 				c.Menu()
 			default:
 				fmt.Println("Choix invalide.")
+			case "2":
+				if c.QueteMagieNoire == 2 {
+					outils.ClearScreen()
+					ascii.AfficherASCII("BanqueASCII/eglise.txt")
+					audio.PlaySound("BanqueSon/NPC/bonjourpretre.ogg")
+					lignes := []string{
+						"\"Je sens une ombre émaner de vous, mon enfant... Expliquez vous.\"",
+						"Vous montrez le cristal noir au prêtre.",
+						"\"Par la lumière, un cristal de détonation ! Lâchez ça sur le champs !\"",
+						"Vous lui expliquez tout...",
+					}
+					outils.Encadrer(lignes)
+					outils.AttendreEntree()
+
+					outils.ClearScreen()
+					ascii.AfficherASCII("BanqueASCII/eglise.txt")
+					c.QueteMagieNoire = 3
+					lignes = []string{
+						"\"Je vois... C'était donc ça, l'origine de ces séismes. Mais il doit y en avoir d'autres. Laissez moi lancer un sort.\"",
+						"D'un geste de la main, le prêtre illumine le cristal. Il devient translucide, sauf sa pointe qui reste obscure en fonction de comment vous le tenez.",
+						"\"Voilà, un traqueur de magie noire. J'ai appris ça quand j'officiais parmi les inquisiteurs du bucher sacré...\"",
+						"\"L'extrêmité de ce cristal pointe désormais vers l'emplacement du rituel où il a été conçu.\"",
+						"Appuyez sur entrée pour sortir de la cathédrale",
+					}
+					outils.Encadrer(lignes)
+					outils.AttendreEntree()
+
+					outils.ClearScreen()
+					ascii.AfficherASCII("BanqueASCII/eglise.txt")
+					lignes = []string{
+						"\"Attendez ! Je pense savoir qui est derrière tout ça. Cette magie noire me rappelle une vieille ennemie.\"",
+						"\"La sorcière Morgane. L'une des mage noir les plus fourbes... Nous courons un grave danger !\"",
+						"\"J'envoie immédiatement une missive à l'ordre des paladins. Et, mon enfant... Si c'est vraiment elle, je vous déconseille de suivre ce cristal.\"",
+					}
+					outils.Encadrer(lignes)
+					outils.AttendreEntree()
+					audio.PlayMusic("BanqueSon/musique/ambiance.ogg")
+					localisation = "haute_ville"
+
+				} else {
+					outils.ClearScreen()
+					ascii.AfficherASCII("BanqueASCII/eglise.txt")
+					audio.PlaySound("BanqueSon/NPC/bonjourpretre.ogg")
+					lignes := []string{
+						"Que la lumière soit toujours avec vous, mon enfant. Qu'elle vous accompagne dans votre voyage",
+					}
+					outils.Encadrer(lignes)
+					outils.AttendreEntree()
+					localisation = "cathedrale"
+				}
 			}
 
 		case "champs":
@@ -435,6 +491,19 @@ func Explorer(c *character.Character) {
 					fmt.Println("Choix invalide.")
 				}
 			}
+
+		case "grotte":
+			outils.ClearScreen()
+			ascii.AfficherASCII("BanqueASCII/grotte.txt")
+			audio.PlayMusic("BanqueSon/musique/grotte.ogg")
+
+			lignes := []string{
+				"Votre cristal traqueur vous a mené à une grotte, bien cachée derrière la végétation.",
+				"Vous remarquez des traces de pas fraiches au sol...",
+				"Qu'est ce que c'était ? Quelque chose se déplace dans les ombre.",
+				"Ça vient vers vous !",
+			}
+			outils.Encadrer(lignes)
 
 		}
 	}

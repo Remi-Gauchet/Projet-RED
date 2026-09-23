@@ -15,7 +15,7 @@ func (c *Character) Menu() {
 	for {
 		outils.ClearScreen()
 
-		fmt.Println("\n\n\n\n\n\n\n\n\n")
+		fmt.Println("\n\n\n\n\n\n\n\n")
 
 		menuLignes := []string{
 			"--- Menu Principal ---",
