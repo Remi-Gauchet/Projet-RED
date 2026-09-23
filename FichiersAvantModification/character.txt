@@ -6,6 +6,7 @@ import (
 	"os"
 	"strings"
 
+	"scarlet/outils"
 	"scarlet/piscine"
 )
 
@@ -16,7 +17,6 @@ const CoutUpgrade = 30
 const BonusUpgrade = 10
 
 type Character struct {
-<<<<<<< HEAD
 	Nom               string
 	Classe            string
 	Niveau            int
@@ -28,20 +28,9 @@ type Character struct {
 	InventaireMax     int
 	UpgradesRestantes int
 	Or                int
+	Sorts             []string
 	Equipement        Equipment
-=======
-	Nom        string
-	Classe     string
-	Niveau     int
-	PVMax      int
-	PVActuels  int
-	ManaMax    int
-	ManaActuel int
-	Inventaire []string
-	Sorts      []string
-	Or         int
-	Equipement Equipment
->>>>>>> 8d8665f (test)
+	QueteMagieNoire   int
 }
 
 func (c Character) String() string {
@@ -75,7 +64,15 @@ func InitCharacter(niveau int, inventaire []string) (Character, error) {
 	var classe string
 
 	for {
-		fmt.Print("Choisissez votre classe (elfe / nain / humain) : ")
+		outils.Encadrer([]string{
+			"Choisissez votre classe :",
+			"",
+			"- elfe",
+			"- nain",
+			"- humain",
+		}, 40)
+		fmt.Print("Votre choix : ")
+
 		saisie, _ := lecteur.ReadString('\n')
 		saisie = strings.TrimSpace(saisie)
 		saisie = strings.ToLower(saisie)
@@ -93,7 +90,7 @@ func InitCharacter(niveau int, inventaire []string) (Character, error) {
 			break
 		}
 
-		fmt.Println("Classe invalide. Veuillez choisir parmi : elfe, nain, humain.")
+		outils.Encadrer([]string{"Classe invalide. Choisissez parmi : elfe, nain, humain."}, 40)
 	}
 
 	pvMax, pvActuels := pvSelonClasse(classe)
@@ -111,6 +108,7 @@ func InitCharacter(niveau int, inventaire []string) (Character, error) {
 		InventaireMax:     InventaireBase,
 		UpgradesRestantes: MaxUpgrades,
 		Or:                OrDepart,
+		Sorts:             []string{},
 		Equipement:        Equipment{},
 	}, nil
 }

@@ -8,7 +8,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	"unicode/utf8"
 
 	"scarlet/character"
 	"scarlet/outils"
@@ -37,7 +36,6 @@ type Monstre struct {
 // INITIALISATION DES MONSTRES
 // ----------------------------------------------------------------------------
 
-// InitGobelin crée le gobelin d'entrainement.
 func InitGobelin() Monstre {
 	return Monstre{
 		Nom:          "Gobelin d'entrainement",
@@ -54,7 +52,6 @@ func InitGobelin() Monstre {
 	}
 }
 
-// InitRoiGobelin crée le Roi Gobelin, plus puissant que le gobelin de base.
 func InitRoiGobelin() Monstre {
 	return Monstre{
 		Nom:          "Roi Gobelin",
@@ -71,7 +68,6 @@ func InitRoiGobelin() Monstre {
 	}
 }
 
-// InitDemon crée le Démon, monstre de milieu de jeu.
 func InitDemon() Monstre {
 	return Monstre{
 		Nom:          "Démon",
@@ -88,7 +84,6 @@ func InitDemon() Monstre {
 	}
 }
 
-// InitDragon crée le Dragon, boss le plus puissant du trio.
 func InitDragon() Monstre {
 	return Monstre{
 		Nom:          "Dragon",
@@ -105,7 +100,6 @@ func InitDragon() Monstre {
 	}
 }
 
-// choisirAttaque tire une attaque au hasard selon les probabilités définies.
 func choisirAttaque(attaques []Attaque) Attaque {
 	tirage := rand.Intn(100)
 	cumul := 0
@@ -124,7 +118,7 @@ func choisirAttaque(attaques []Attaque) Attaque {
 // ----------------------------------------------------------------------------
 
 const largeurColonne = 40 // largeur du bloc joueur (gauche) et du bloc monstre (droite)
-const largeurBoite = 90   // largeur intérieure totale du rectangle
+const largeurBoite = 90   // largeur intérieure des rectangles (arène + menus)
 
 func chargerLignes(chemin string) []string {
 	data, err := os.ReadFile(chemin)
@@ -138,22 +132,6 @@ func afficherASCIIBrut(chemin string) {
 	for _, ligne := range chargerLignes(chemin) {
 		fmt.Println(ligne)
 	}
-}
-
-// encadrer affiche une liste de lignes à l'intérieur d'un rectangle façon
-// écran de combat Undertale.
-func encadrer(lignes []string) {
-	fmt.Println("┌" + strings.Repeat("─", largeurBoite+2) + "┐")
-	for _, l := range lignes {
-		rc := utf8.RuneCountInString(l)
-		if rc > largeurBoite {
-			runes := []rune(l)
-			l = string(runes[:largeurBoite])
-			rc = largeurBoite
-		}
-		fmt.Printf("│ %s%s │\n", l, strings.Repeat(" ", largeurBoite-rc))
-	}
-	fmt.Println("└" + strings.Repeat("─", largeurBoite+2) + "┘")
 }
 
 // construireBlocJoueur construit le bloc de gauche : image du joueur, ses PV,
@@ -212,7 +190,7 @@ func AfficherArene(c *character.Character, m *Monstre) {
 		contenu = append(contenu, fmt.Sprintf("%-*s   %s", largeurColonne, gauche, droite))
 	}
 
-	encadrer(contenu)
+	outils.Encadrer(contenu, largeurBoite)
 }
 
 // ----------------------------------------------------------------------------
@@ -275,10 +253,14 @@ func lancerSort(c *character.Character, monstre *Monstre, nomSort string) bool {
 func TourMonstre(monstre *Monstre, c *character.Character) {
 	outils.ClearScreen()
 	AfficherArene(c, monstre)
-	fmt.Printf("\n--- Tour de %s ---\n", monstre.Nom)
+
+	var info []string
+	info = append(info, fmt.Sprintf("Tour de %s", monstre.Nom))
+	info = append(info, "")
 
 	if monstre.ToursGeles > 0 {
-		fmt.Printf("%s est gelé et ne peut pas agir (%d tour(s) restant(s)).\n", monstre.Nom, monstre.ToursGeles)
+		info = append(info, fmt.Sprintf("%s est gelé et ne peut pas agir (%d tour(s) restant(s)).", monstre.Nom, monstre.ToursGeles))
+		outils.Encadrer(info, largeurBoite)
 		monstre.ToursGeles--
 		time.Sleep(1500 * time.Millisecond)
 		return
@@ -291,8 +273,9 @@ func TourMonstre(monstre *Monstre, c *character.Character) {
 		c.PVActuels = 0
 	}
 
-	fmt.Printf("%s utilise %s et inflige %d dégâts à %s.\n", monstre.Nom, attaque.Nom, attaque.Degats, c.Nom)
-	fmt.Printf("%s PV : %d/%d\n", c.Nom, c.PVActuels, c.PVMax)
+	info = append(info, fmt.Sprintf("%s utilise %s et inflige %d dégâts à %s.", monstre.Nom, attaque.Nom, attaque.Degats, c.Nom))
+	info = append(info, fmt.Sprintf("%s PV : %d/%d", c.Nom, c.PVActuels, c.PVMax))
+	outils.Encadrer(info, largeurBoite)
 	time.Sleep(1500 * time.Millisecond)
 }
 
@@ -304,15 +287,17 @@ func TourJoueur(c *character.Character, monstre *Monstre, lecteur *bufio.Reader)
 	for {
 		outils.ClearScreen()
 		AfficherArene(c, monstre)
-		fmt.Printf("\n--- Tour de %s (%s) ---\n", c.Nom, c.Classe)
 
-		fmt.Println("\n=== MENU COMBAT ===")
-		fmt.Println("1. Coup Risqué (50% de chance, 20 dégâts si réussi)")
-		fmt.Println("2. Frappe Rapide (10 dégâts assurés)")
-		fmt.Println("3. Utiliser une potion")
+		var menu []string
+		menu = append(menu, fmt.Sprintf("Tour de %s (%s)", c.Nom, c.Classe))
+		menu = append(menu, "")
+		menu = append(menu, "1. Coup Risqué (50% de chance, 20 dégâts si réussi)")
+		menu = append(menu, "2. Frappe Rapide (10 dégâts assurés)")
+		menu = append(menu, "3. Utiliser une potion")
 		if len(c.Sorts) > 0 {
-			fmt.Println("4. Lancer un sort")
+			menu = append(menu, "4. Lancer un sort")
 		}
+		outils.Encadrer(menu, largeurBoite)
 		fmt.Print("Choisissez une action : ")
 
 		choix, _ := lecteur.ReadString('\n')
@@ -364,10 +349,12 @@ func TourJoueur(c *character.Character, monstre *Monstre, lecteur *bufio.Reader)
 				time.Sleep(1 * time.Second)
 				continue
 			}
-			fmt.Println("Sorts connus :")
+			var sortsMenu []string
+			sortsMenu = append(sortsMenu, "Sorts connus :")
 			for i, sort := range c.Sorts {
-				fmt.Printf("%d. %s (coût : %d mana)\n", i+1, sort, coutMana[sort])
+				sortsMenu = append(sortsMenu, fmt.Sprintf("%d. %s (coût : %d mana)", i+1, sort, coutMana[sort]))
 			}
+			outils.Encadrer(sortsMenu, largeurBoite)
 			fmt.Print("Quel sort voulez-vous lancer ? ")
 
 			choixSort, _ := lecteur.ReadString('\n')
@@ -400,13 +387,18 @@ func TourJoueur(c *character.Character, monstre *Monstre, lecteur *bufio.Reader)
 const coutResurrection = 10
 
 func GererMort(c *character.Character, lecteur *bufio.Reader) {
-	outils.ClearScreen()
-	afficherASCIIBrut("BanqueASCII/mort.txt")
-	fmt.Println("\nMême les rois et les héros finissent par offrir leur sourire le plus misérable à ce monde impitoyable qui contemple leur déchéance avec une indifférence glaciale.")
-
 	for {
-		fmt.Println("\n1. Ressusciter à l'auberge (Or -10, PV au maximum)")
-		fmt.Println("2. Quitter le jeu")
+		outils.ClearScreen()
+		afficherASCIIBrut("BanqueASCII/mort.txt")
+
+		var lignes []string
+		lignes = append(lignes, "Même les rois et les héros finissent par offrir leur sourire le plus")
+		lignes = append(lignes, "misérable à ce monde impitoyable qui contemple leur déchéance avec")
+		lignes = append(lignes, "une indifférence glaciale.")
+		lignes = append(lignes, "")
+		lignes = append(lignes, "1. Ressusciter à l'auberge (Or -10, PV au maximum)")
+		lignes = append(lignes, "2. Quitter le jeu")
+		outils.Encadrer(lignes, largeurBoite)
 		fmt.Print("Votre choix : ")
 
 		choix, _ := lecteur.ReadString('\n')
@@ -429,6 +421,7 @@ func GererMort(c *character.Character, lecteur *bufio.Reader) {
 
 		default:
 			fmt.Println("Choix invalide.")
+			time.Sleep(1 * time.Second)
 		}
 	}
 }
@@ -469,22 +462,18 @@ func Combattre(c *character.Character, monstre Monstre) {
 	}
 }
 
-// TrainingFight : combat d'entrainement contre le gobelin.
 func TrainingFight(c *character.Character) {
 	Combattre(c, InitGobelin())
 }
 
-// AffronterRoiGobelin : combat contre le Roi Gobelin.
 func AffronterRoiGobelin(c *character.Character) {
 	Combattre(c, InitRoiGobelin())
 }
 
-// AffronterDemon : combat contre le Démon.
 func AffronterDemon(c *character.Character) {
 	Combattre(c, InitDemon())
 }
 
-// AffronterDragon : combat contre le Dragon.
 func AffronterDragon(c *character.Character) {
 	Combattre(c, InitDragon())
 }
@@ -493,8 +482,6 @@ func AffronterDragon(c *character.Character) {
 // LANCEMENT PAR NOM DE MONSTRE
 // ----------------------------------------------------------------------------
 
-// Lancer déclenche un combat contre le monstre désigné par son nom (insensible
-// à la casse). Exemples : combat.Lancer("gobelin", c), combat.Lancer("dragon", c)
 func Lancer(nomMonstre string, c *character.Character) error {
 	switch strings.ToLower(strings.TrimSpace(nomMonstre)) {
 	case "gobelin":

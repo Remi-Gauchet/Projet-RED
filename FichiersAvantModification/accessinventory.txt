@@ -4,11 +4,13 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 )
 
 // AccessInventory affiche le contenu de l'inventaire, puis propose un menu
-// d'actions selon les objets présents (fermer l'inventaire, boire une potion...)
+// d'actions selon les objets présents (fermer l'inventaire, boire une potion,
+// apprendre un sort...)
 func (c *Character) AccessInventory() {
 	lecteur := bufio.NewReader(os.Stdin)
 
@@ -21,10 +23,13 @@ func (c *Character) AccessInventory() {
 		}
 
 		auMoinsUnePotion := false
+		var livresTrouves []string
 		for _, objet := range c.Inventaire {
 			if objet == "Potion de soins" {
 				auMoinsUnePotion = true
-				break
+			}
+			if strings.HasPrefix(objet, PrefixeLivreSort) {
+				livresTrouves = append(livresTrouves, objet)
 			}
 		}
 
@@ -32,6 +37,9 @@ func (c *Character) AccessInventory() {
 		fmt.Println("1. Fermer l'inventaire")
 		if auMoinsUnePotion {
 			fmt.Println("2. Boire une potion de soins")
+		}
+		if len(livresTrouves) > 0 {
+			fmt.Println("3. Apprendre un sort")
 		}
 		fmt.Print("Selon votre choix, tapez le numéro puis entrée : ")
 
@@ -54,9 +62,42 @@ func (c *Character) AccessInventory() {
 			}
 			fmt.Println() // ligne vide pour aérer avant de réafficher le menu
 
+		case "3":
+			if len(livresTrouves) == 0 {
+				fmt.Println("Choix invalide.")
+				fmt.Println()
+				continue
+			}
+			c.choisirLivreAApprendre(livresTrouves, lecteur)
+			fmt.Println()
+
 		default:
 			fmt.Println("Choix invalide.")
 			fmt.Println()
 		}
+	}
+}
+
+// choisirLivreAApprendre liste les livres de sort disponibles dans
+// l'inventaire et demande au joueur lequel il souhaite étudier.
+func (c *Character) choisirLivreAApprendre(livres []string, lecteur *bufio.Reader) {
+	fmt.Println("Livres disponibles :")
+	for i, livre := range livres {
+		fmt.Printf("%d. %s\n", i+1, livre)
+	}
+	fmt.Print("Quel livre voulez-vous étudier ? ")
+
+	choix, _ := lecteur.ReadString('\n')
+	choix = strings.TrimSpace(choix)
+
+	num, err := strconv.Atoi(choix)
+	if err != nil || num < 1 || num > len(livres) {
+		fmt.Println("Choix invalide.")
+		return
+	}
+
+	err = c.ApprendreSort(livres[num-1])
+	if err != nil {
+		fmt.Println("Erreur :", err)
 	}
 }

@@ -7,7 +7,9 @@ import (
 	"strconv"
 	"strings"
 
+	"scarlet/ascii"
 	"scarlet/character"
+	"scarlet/outils"
 )
 
 // Recette représente un équipement fabricable, avec ses composants requis et son coût en or.
@@ -49,15 +51,29 @@ func Fabriquer(c *character.Character) {
 	lecteur := bufio.NewReader(os.Stdin)
 
 	for {
-		fmt.Println("\nQue voulez-vous fabriquer ?")
+		outils.ClearScreen()
+		ascii.AfficherASCII("BanqueASCII/forgeron.txt")
+
+		var lignes []string
+		lignes = append(lignes, fmt.Sprintf("--- Atelier de Forge --- (Or : %d)", c.Or))
+		lignes = append(lignes, "Que voulez-vous fabriquer ?")
+		lignes = append(lignes, "")
+
+		// Génération de la liste des recettes
 		for i, r := range recettes {
-			fmt.Printf("%d. %s (%d or)\n", i+1, r.Nom, r.Prix)
+			lignes = append(lignes, fmt.Sprintf("%d. %s (%d or)", i+1, r.Nom, r.Prix))
 			for composant, quantite := range r.Composants {
-				fmt.Printf("     - %d %s\n", quantite, composant)
+				lignes = append(lignes, fmt.Sprintf("    - %d x %s", quantite, composant))
 			}
+			lignes = append(lignes, "")
 		}
-		fmt.Println("0. Retour")
-		fmt.Print("Votre choix : ")
+
+		lignes = append(lignes, "0. Retour")
+
+		// Encadrer la liste des recettes
+		outils.Encadrer(lignes, 90)
+
+		fmt.Print("                                                                    Votre choix : ")
 
 		choix, _ := lecteur.ReadString('\n')
 		choix = strings.TrimSpace(choix)
@@ -69,19 +85,19 @@ func Fabriquer(c *character.Character) {
 		num, err := strconv.Atoi(choix)
 		if err != nil || num < 1 || num > len(recettes) {
 			fmt.Println("Choix invalide.")
+			attendreEntree(lecteur)
 			continue
 		}
 
 		fabriquerObjet(c, recettes[num-1])
-		fmt.Println("\nAppuyez sur Entrée pour continuer...")
-		lecteur.ReadString('\n')
+		attendreEntree(lecteur)
 	}
 }
 
 func fabriquerObjet(c *character.Character, r Recette) {
 	// Vérification de l'or
 	if c.Or < r.Prix {
-		fmt.Printf("Vous n'avez pas assez d'or pour fabriquer %s (%d or nécessaires, vous en possédez %d).\n", r.Nom, r.Prix, c.Or)
+		fmt.Printf("\nVous n'avez pas assez d'or pour fabriquer %s (%d or nécessaires, vous en possédez %d).\n", r.Nom, r.Prix, c.Or)
 		return
 	}
 
@@ -89,7 +105,7 @@ func fabriquerObjet(c *character.Character, r Recette) {
 	for composant, quantiteRequise := range r.Composants {
 		quantitePossedee := compterOccurrences(c.Inventaire, composant)
 		if quantitePossedee < quantiteRequise {
-			fmt.Printf("Il vous manque des composants pour fabriquer %s : %s (besoin de %d, vous en avez %d).\n",
+			fmt.Printf("\nIl vous manque des composants pour fabriquer %s : %s (besoin de %d, vous en avez %d).\n",
 				r.Nom, composant, quantiteRequise, quantitePossedee)
 			return
 		}
@@ -98,7 +114,7 @@ func fabriquerObjet(c *character.Character, r Recette) {
 	// Vérification de la place dans l'inventaire (composants consommés, 1 objet ajouté)
 	placeApresFabrication := len(c.Inventaire) - totalComposants(r) + 1
 	if placeApresFabrication > c.InventaireMax {
-		fmt.Println("Votre inventaire n'aura pas assez de place pour récupérer l'objet fabriqué.")
+		fmt.Println("\nVotre inventaire n'aura pas assez de place pour récupérer l'objet fabriqué.")
 		return
 	}
 
@@ -112,7 +128,7 @@ func fabriquerObjet(c *character.Character, r Recette) {
 	c.Or -= r.Prix
 	c.AddInventory(r.Nom)
 
-	fmt.Printf("Vous avez fabriqué : %s !\n", r.Nom)
+	fmt.Printf("\nVous avez fabriqué : %s !\n", r.Nom)
 }
 
 // compterOccurrences compte combien de fois un objet apparaît dans l'inventaire.
@@ -133,4 +149,9 @@ func totalComposants(r Recette) int {
 		total += quantite
 	}
 	return total
+}
+
+func attendreEntree(lecteur *bufio.Reader) {
+	fmt.Print("\n                                                                    Appuyez sur Entrée pour continuer...")
+	lecteur.ReadString('\n')
 }

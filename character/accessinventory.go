@@ -6,6 +6,8 @@ import (
 	"os"
 	"strconv"
 	"strings"
+
+	"scarlet/outils"
 )
 
 // AccessInventory affiche le contenu de l'inventaire, puis propose un menu
@@ -15,11 +17,14 @@ func (c *Character) AccessInventory() {
 	lecteur := bufio.NewReader(os.Stdin)
 
 	for {
+		var menuLignes []string
+
+		// Préparation de l'affichage de l'inventaire
 		if len(c.Inventaire) == 0 {
-			fmt.Println("Inventaire vide.")
+			menuLignes = append(menuLignes, "Inventaire vide.")
 		} else {
 			detail := strings.Join(c.Inventaire, " - ")
-			fmt.Println(detail)
+			menuLignes = append(menuLignes, "Inventaire : "+detail)
 		}
 
 		auMoinsUnePotion := false
@@ -33,14 +38,20 @@ func (c *Character) AccessInventory() {
 			}
 		}
 
-		fmt.Println("\nQue voulez-vous faire ?")
-		fmt.Println("1. Fermer l'inventaire")
+		// Préparation des options du menu
+		menuLignes = append(menuLignes, "")
+		menuLignes = append(menuLignes, "Que voulez-vous faire ?")
+		menuLignes = append(menuLignes, "1. Fermer l'inventaire")
 		if auMoinsUnePotion {
-			fmt.Println("2. Boire une potion de soins")
+			menuLignes = append(menuLignes, "2. Boire une potion de soins")
 		}
 		if len(livresTrouves) > 0 {
-			fmt.Println("3. Apprendre un sort")
+			menuLignes = append(menuLignes, "3. Apprendre un sort")
 		}
+
+		// Affichage du cadre style Undertale
+		outils.Encadrer(menuLignes, 55)
+
 		fmt.Print("Selon votre choix, tapez le numéro puis entrée : ")
 
 		choix, _ := lecteur.ReadString('\n')
@@ -81,10 +92,14 @@ func (c *Character) AccessInventory() {
 // choisirLivreAApprendre liste les livres de sort disponibles dans
 // l'inventaire et demande au joueur lequel il souhaite étudier.
 func (c *Character) choisirLivreAApprendre(livres []string, lecteur *bufio.Reader) {
-	fmt.Println("Livres disponibles :")
+	var lignes []string
+	lignes = append(lignes, "Livres disponibles :")
 	for i, livre := range livres {
-		fmt.Printf("%d. %s\n", i+1, livre)
+		lignes = append(lignes, fmt.Sprintf("%d. %s", i+1, livre))
 	}
+
+	outils.Encadrer(lignes, 55)
+
 	fmt.Print("Quel livre voulez-vous étudier ? ")
 
 	choix, _ := lecteur.ReadString('\n')

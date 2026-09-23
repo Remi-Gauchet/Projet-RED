@@ -9,19 +9,27 @@ import (
 	"scarlet/outils"
 )
 
-// Menu affiche le menu principal du jeu et redirige vers les actions du personnage.
-// Le joueur peut y revenir autant de fois qu'il le souhaite au cours de la partie.
 func (c *Character) Menu() {
 	lecteur := bufio.NewReader(os.Stdin)
 
 	for {
 		outils.ClearScreen()
-		fmt.Println("\n--- Menu ---")
-		fmt.Println("1. Afficher les informations du personnage")
-		fmt.Println("2. Accéder à l'inventaire")
-		fmt.Println("3. Équipement")
-		fmt.Println("4. Sortir du menu")
-		fmt.Print("Entrez le numéro de votre choix : ")
+
+		fmt.Println("\n\n\n\n\n\n\n\n\n")
+
+		menuLignes := []string{
+			"--- Menu Principal ---",
+			"",
+			"1. Afficher les informations du personnage",
+			"2. Accéder à l'inventaire",
+			"3. Équipement",
+			"4. Sortir du menu",
+		}
+
+		outils.Encadrer(menuLignes, 45)
+
+		// Exactly 74 spaces before the prompt
+		fmt.Print("                                                                          Entrez le numéro de votre choix : ")
 
 		choix, _ := lecteur.ReadString('\n')
 		choix = strings.TrimSpace(choix)
@@ -50,7 +58,6 @@ func (c *Character) Menu() {
 	}
 }
 
-// attendreEntree met le programme en pause jusqu'à ce que le joueur appuie sur Entrée.
 func attendreEntree(lecteur *bufio.Reader) {
 	fmt.Println("\nAppuyez sur Entrée pour continuer...")
 	lecteur.ReadString('\n')

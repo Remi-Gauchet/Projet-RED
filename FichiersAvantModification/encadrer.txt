@@ -1,0 +1,24 @@
+package outils
+
+import (
+	"fmt"
+	"strings"
+	"unicode/utf8"
+)
+
+// Encadrer affiche une liste de lignes à l'intérieur d'un rectangle façon
+// écran de dialogue (style Undertale). largeur est la largeur intérieure
+// du rectangle, en nombre de caractères visibles par ligne.
+func Encadrer(lignes []string, largeur int) {
+	fmt.Println("┌" + strings.Repeat("─", largeur+2) + "┐")
+	for _, l := range lignes {
+		rc := utf8.RuneCountInString(l)
+		if rc > largeur {
+			runes := []rune(l)
+			l = string(runes[:largeur])
+			rc = largeur
+		}
+		fmt.Printf("│ %s%s │\n", l, strings.Repeat(" ", largeur-rc))
+	}
+	fmt.Println("└" + strings.Repeat("─", largeur+2) + "┘")
+}
