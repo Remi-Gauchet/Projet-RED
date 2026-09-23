@@ -9,6 +9,7 @@ import (
 	"strings"
 	"time"
 
+	"scarlet/audio"
 	"scarlet/character"
 	"scarlet/outils"
 )
@@ -216,6 +217,8 @@ func lancerSort(c *character.Character, monstre *Monstre, nomSort string) bool {
 
 	switch nomSort {
 	case "Boule de Feu":
+		chemin := "BanqueSon/" + c.Classe + "/bouledefeu.ogg"
+		audio.PlaySoundBlocking(chemin)
 		degats := 15 * c.Niveau
 		monstre.PVActuels -= degats
 		if monstre.PVActuels < 0 {
@@ -485,15 +488,20 @@ func AffronterDragon(c *character.Character) {
 func Lancer(nomMonstre string, c *character.Character) error {
 	switch strings.ToLower(strings.TrimSpace(nomMonstre)) {
 	case "gobelin":
+		audio.PlayMusic("BanqueSon/musique/anciencombat.ogg")
 		Combattre(c, InitGobelin())
 	case "roi gobelin", "roigobelin", "roi_gobelin":
+		audio.PlayMusic("BanqueSon/musique/anciencombat.ogg")
 		Combattre(c, InitRoiGobelin())
 	case "demon", "démon":
+		audio.PlayMusic("BanqueSon/musique/incendie.ogg")
 		Combattre(c, InitDemon())
 	case "dragon":
+		audio.PlayMusic("BanqueSon/musique/cataclysme.ogg")
 		Combattre(c, InitDragon())
 	default:
 		return fmt.Errorf("monstre inconnu : '%s'", nomMonstre)
 	}
+	audio.PlayMusic("BanqueSon/musique/ambiance.ogg")
 	return nil
 }
