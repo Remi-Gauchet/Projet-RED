@@ -121,6 +121,8 @@ var coutMana = map[string]int{
 
 // lancerSort applique l'effet du sort choisi. Renvoie false si le sort n'a pas
 // pu être lancé (le tour n'est alors pas consommé).
+// La puissance des sorts à dégâts/soin augmente avec le niveau du personnage
+// (multiplicateur = c.Lvl : lvl 1 = x1, lvl 2 = x2, etc.).
 func lancerSort(c *character.Character, monstre *Monstre, nomSort string) bool {
 	cout, existe := coutMana[nomSort]
 	if !existe {
@@ -134,7 +136,7 @@ func lancerSort(c *character.Character, monstre *Monstre, nomSort string) bool {
 
 	switch nomSort {
 	case "Boule de Feu":
-		degats := 15
+		degats := 15 * c.Niveau
 		monstre.PVActuels -= degats
 		if monstre.PVActuels < 0 {
 			monstre.PVActuels = 0
@@ -142,11 +144,12 @@ func lancerSort(c *character.Character, monstre *Monstre, nomSort string) bool {
 		fmt.Printf("\n%s lance Boule de Feu et inflige %d dégâts à %s !\n", c.Nom, degats, monstre.Nom)
 
 	case "Glace":
+		// Effet de statut (gel), pas de dégâts : pas de multiplicateur de niveau ici.
 		monstre.ToursGeles = 2
 		fmt.Printf("\n%s lance Glace ! %s est gelé et ne pourra pas agir pendant 2 tours.\n", c.Nom, monstre.Nom)
 
 	case "Lumière Divine":
-		soin := 40
+		soin := 40 * c.Niveau
 		c.PVActuels += soin
 		if c.PVActuels > c.PVMax {
 			c.PVActuels = c.PVMax
@@ -194,6 +197,8 @@ func TourMonstre(monstre *Monstre, c *character.Character) {
 // TOUR DU JOUEUR
 // ----------------------------------------------------------------------------
 
+// La puissance des attaques du joueur augmente avec le niveau du personnage
+// (multiplicateur = c.Lvl : lvl 1 = x1, lvl 2 = x2, etc.).
 func TourJoueur(c *character.Character, monstre *Monstre, lecteur *bufio.Reader) {
 	fmt.Printf("\n--- Tour de %s (%s) ---\n", c.Nom, c.Classe)
 
@@ -218,7 +223,7 @@ func TourJoueur(c *character.Character, monstre *Monstre, lecteur *bufio.Reader)
 			if rand.Intn(2) == 0 {
 				fmt.Println("Raté ! Vous perdez votre tour.")
 			} else {
-				degats := 20
+				degats := 20 * c.Niveau
 				monstre.PVActuels -= degats
 				if monstre.PVActuels < 0 {
 					monstre.PVActuels = 0
@@ -230,7 +235,7 @@ func TourJoueur(c *character.Character, monstre *Monstre, lecteur *bufio.Reader)
 			return
 
 		case "2":
-			degats := 10
+			degats := 10 * c.Niveau
 			monstre.PVActuels -= degats
 			if monstre.PVActuels < 0 {
 				monstre.PVActuels = 0
