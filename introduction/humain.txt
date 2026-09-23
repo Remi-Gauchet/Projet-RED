@@ -15,5 +15,6 @@ Vous revêtez votre cape et commencez votre aventure.
 Gâre à vous, suppôts du mal, car nul ne saurait échapper à la justice !
 
 
-        Bonus racial :      Aucun
-        Malus racial :      Aucun
+        Bonus racial :          Aucun
+        Malus racial :          Aucun
+        Alignement :            Loyal Bon

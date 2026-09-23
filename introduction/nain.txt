@@ -14,3 +14,4 @@ Je m’en vais parcourir le monde, et m’emparer de ses richesses !
 
     Bonus racial :      + 20 PV
     Malus racial :      - 20 Mana
+    Alignement :        Chaotique Neutre

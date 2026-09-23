@@ -13,3 +13,4 @@ Vous êtes une occultiste. Et bien que peu connaissent votre nom en ces contrée
 
 			Bonus racial :      + 20 Mana
 			Malus racial :	    - 20 PV
+			Alignement : 		Mauvais

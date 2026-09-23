@@ -336,7 +336,10 @@ func Explorer(c *character.Character) {
 
 		case "champs":
 			outils.ClearScreen()
-
+			ascii.AfficherASCII("BanqueASCII/carte.txt")
+			fmt.Println("\nVous vous guidez sur les routes de campagne avec la carte que vous a donné le duc.")
+			fmt.Println("Un gobelin sort d'une fougère et vous fonce dessus !")
+			outils.AttendreEntree()
 			mort, err := combat.Lancer("gobelin", c)
 			if err != nil {
 				fmt.Println("Erreur combat :", err)
@@ -346,6 +349,46 @@ func Explorer(c *character.Character) {
 				localisation = "cathedrale"
 			} else {
 				localisation = "champs_2"
+			}
+
+		case "champs_2":
+			outils.ClearScreen()
+			ascii.AfficherASCII("BanqueASCII/champs_2.txt")
+			fmt.Println("")
+			fmt.Println("")
+			fmt.Println("")
+			fmt.Println("0. Ouvrir le menu.")
+
+			lignes := []string{
+				"Vous voici à un embranchement. Vous entendez des bruits dans les hautes herbes...",
+				"1. Vous diriger vers la ferme.",
+				"2. Inspecter les hautes herbes.",
+				"3. Retourner en ville.",
+				"0. Ouvrir le menu.",
+			}
+			outils.Encadrer(lignes, largeurCadre)
+
+			choix := lireChoix(lecteur)
+			switch choix {
+			case "1":
+				localisation = "ferme"
+			case "2":
+				mort, err := combat.Lancer("gobelin", c)
+				if err != nil {
+					fmt.Println("Erreur combat :", err)
+				}
+
+				if mort {
+					localisation = "cathedrale"
+				} else {
+					localisation = "champs_2"
+				}
+			case "3":
+				localisation = "entree_village"
+			case "0":
+				c.Menu()
+			default:
+				fmt.Println("Choix invalide.")
 			}
 		}
 	}
