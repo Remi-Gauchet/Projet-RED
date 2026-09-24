@@ -448,7 +448,7 @@ func AjouterXP(c *character.Character, xpGagnee int) {
 	for c.XP >= c.XPMax {
 		c.XP -= c.XPMax
 		c.Niveau++
-		
+
 		// Multiplication du seuil par 1.5
 		c.XPMax = int(float64(c.XPMax) * 1.5)
 
@@ -598,6 +598,5 @@ func Lancer(nomMonstre string, c *character.Character) (bool, error) {
 		return false, fmt.Errorf("monstre inconnu : '%s'", nomMonstre)
 	}
 
-	audio.PlayMusic("BanqueSon/musique/ambiance.ogg")
 	return mort, nil
 }

@@ -405,6 +405,7 @@ func Explorer(c *character.Character) {
 				localisation = "cathedrale"
 			} else {
 				localisation = "champs_2"
+				audio.PlayMusic("BanqueSon/musique/ambiance.ogg")
 			}
 
 		case "champs_2":
@@ -433,6 +434,7 @@ func Explorer(c *character.Character) {
 					localisation = "cathedrale"
 				} else {
 					localisation = "champs_2"
+					audio.PlayMusic("BanqueSon/musique/ambiance.ogg")
 				}
 			case "3":
 				localisation = "entree_village"
@@ -452,7 +454,7 @@ func Explorer(c *character.Character) {
 				}
 				outils.Encadrer(lignesQuete)
 				outils.AttendreEntree()
-				mort, err := combat.Lancer("gobelin", c)
+				mort, err := combat.Lancer("roigobelin", c)
 				if err != nil {
 					fmt.Println("Erreur combat :", err)
 				}
@@ -499,11 +501,83 @@ func Explorer(c *character.Character) {
 
 			lignes := []string{
 				"Votre cristal traqueur vous a mené à une grotte, bien cachée derrière la végétation.",
-				"Vous remarquez des traces de pas fraiches au sol...",
-				"Qu'est ce que c'était ? Quelque chose se déplace dans les ombre.",
+				"Le traqueur s'affole : vous devez vous repérer par vous-même. À propos, il y a des traces de pas fraiches...",
+				"Hein ? Qu'est ce que c'était ? Quelque chose se déplace dans les ombre !",
 				"Ça vient vers vous !",
 			}
 			outils.Encadrer(lignes)
+			mort, err := combat.Lancer("demon", c)
+			if err != nil {
+				fmt.Println("Erreur combat :", err)
+			}
+
+			if mort {
+				localisation = "cathedrale"
+			} else {
+				outils.ClearScreen()
+				ascii.AfficherASCII("BanqueASCII/grotte.txt")
+				audio.PlayMusic("BanqueSon/musique/grotte.ogg")
+				lignesQuete := []string{
+					"C'était un démon ! Qu'est ce qu'une créature des Tréfonds fait si proche de la surface ?",
+					"1. Suivre les traces de pas, et vous enfoncer plus profondément dans la grotte.",
+					"2. Retourner dans les champs.",
+					"0. Ouvrir le menu.",
+				}
+				outils.Encadrer(lignesQuete)
+
+				choix := lireChoix(lecteur)
+				switch choix {
+				case "1":
+					localisation = "trefonds"
+				case "2":
+					localisation = "champs_2"
+				case "0":
+					c.Menu()
+				default:
+					fmt.Println("Choix invalide.")
+				}
+			}
+
+		case "trefonds":
+			outils.ClearScreen()
+			ascii.AfficherASCII("BanqueASCII/trefonds.txt")
+
+			lignes := []string{
+				"Vous remarquez des cristaux fracturés sur le sol, et des roches vitrifiées. Une grande explosion a eu lieu ici.",
+				"Un courant d'air ?  Le passage s'élargit vers un gouffre, et vous arrivez au bout du chemin.",
+				"Non... ce sont les Tréfonds ! Ce qu'il restes de la civilisation naine à son apogée, avant son ravage par les démons.",
+				"Vous essayez de passer inaperçu, mais une patrouille vous repère !",
+			}
+			outils.Encadrer(lignes)
+			mort, err := combat.Lancer("demon", c)
+			if err != nil {
+				fmt.Println("Erreur combat :", err)
+			}
+
+			if mort {
+				localisation = "cathedrale"
+			} else {
+				outils.ClearScreen()
+				ascii.AfficherASCII("BanqueASCII/trefonds.txt")
+				audio.PlayMusic("BanqueSon/musique/grotte.ogg")
+				c.QueteMagieNoire = 4
+				lignes := []string{
+					"Vite, avant que d'autres n'arrivent !",
+					"1. Faire demi tour et courir vers l'entrée de la grotte.",
+					"0. Menu.",
+				}
+				outils.Encadrer(lignes)
+				choix := lireChoix(lecteur)
+				switch choix {
+				case "1":
+					localisation = "morgane"
+				case "0":
+					c.Menu()
+				default:
+					fmt.Println("Choix invalide.")
+				}
+
+			}
 
 		}
 	}
