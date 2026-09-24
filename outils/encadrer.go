@@ -7,7 +7,7 @@ import (
 )
 
 func Encadrer(lignes []string) {
-	marge := strings.Repeat(" ", 74)
+	marge := strings.Repeat(" ", 30)
 
 	// Calcule la largeur nécessaire = longueur de la ligne la plus longue
 	largeur := 0
