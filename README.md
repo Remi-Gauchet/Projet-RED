@@ -4,7 +4,8 @@
         git clone
 
 puis vous devez importer le contenu de go.mod pour pouvoir voir les images en couleurs, et entendre les sons
-tapez go mod download
+tapez
+go mod download
 
 Puis lancez le jeu via
 go run main.go

@@ -13,6 +13,7 @@ import (
 	"scarlet/forge"
 	"scarlet/marchand"
 	"scarlet/outils"
+	"scarlet/video"
 )
 
 const largeurCadre = 65
@@ -607,30 +608,35 @@ func Explorer(c *character.Character) {
 			lignes := []string{
 				"Vous entendez un cri de dragon qui résonne dans la grotte. Ça venait de l'exterieur... Vous ressortez au sommet d'une colline.",
 				"Toute la ville est en flammes, la cathédrale s'effondre ! Un grand dragon noir est en train de tout ravager ! ",
-				"Il a ouvert une brèche dans les fortifications. Les démons en profitent pour donner l'assaut. L'elfe à leur tête est introuvable pour l'instant...",
-				"1. Foncer dans la bataille !",
+				"Il a ouvert une brèche dans les fortifications. Les démons en profitent pour lancer l'assaut. L'elfe à leur tête est introuvable pour l'instant...",
+				"1. Foncer vers la ville !",
 				"0. Ouvrir le menu.",
 			}
 			outils.Encadrer(lignes)
 			choix := lireChoix(lecteur)
 			switch choix {
 			case "1":
+				err := video.PlayASCII(20)
+				if err != nil {
+					fmt.Println("Erreur lecture vidéo :", err)
+				}
 				mort, err := combat.Lancer("dragon", c)
 				if err != nil {
 					fmt.Println("Erreur combat :", err)
 				}
 
 				if mort {
-					ascii.AfficherASCII("BanqueASCII/incendie.txt")
+					ascii.AfficherASCII("BanqueASCII/mort.txt")
 					lignes := []string{
 						"La cathédrale a brulé...",
-						"Personne ne peut vous ressusciter.",
+						"Personne ne vous ressuscitera plus.",
 						"GAME OVER",
 					}
 					outils.Encadrer(lignes)
 					os.Exit(0)
 				} else {
 					fmt.Println("\"Merci d'avoir joué !\"")
+					os.Exit(0)
 				}
 
 			case "0":
