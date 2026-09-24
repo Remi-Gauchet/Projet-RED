@@ -518,8 +518,8 @@ func Explorer(c *character.Character) {
 				ascii.AfficherASCII("BanqueASCII/grotte.txt")
 				audio.PlayMusic("BanqueSon/musique/grotte.ogg")
 				lignesQuete := []string{
-					"C'était un démon ! Qu'est ce qu'une créature des Tréfonds fait si proche de la surface ?",
-					"1. Suivre les traces de pas, et vous enfoncer plus profondément dans la grotte.",
+					"C'était un démon des profondeurs ! Qu'est ce qu'une créature des Tréfonds fait si proche de la surface ?",
+					"1. Choisir de suivre les traces de pas, et vous enfoncer plus profondément dans la grotte.",
 					"2. Retourner dans les champs.",
 					"0. Ouvrir le menu.",
 				}
@@ -544,7 +544,7 @@ func Explorer(c *character.Character) {
 
 			lignes := []string{
 				"Vous remarquez des cristaux fracturés sur le sol, et des roches vitrifiées. Une grande explosion a eu lieu ici.",
-				"Un courant d'air ?  Le passage s'élargit vers un gouffre, et vous arrivez au bout du chemin.",
+				"Le chemin se divise en plusieurs couloirs. L'un d'entre eux s'élargit vers un gouffre, et vous arrivez au bout du chemin.",
 				"Non... ce sont les Tréfonds ! Ce qu'il restes de la civilisation naine à son apogée, avant son ravage par les démons.",
 				"Vous essayez de passer inaperçu, mais une patrouille vous repère !",
 			}
@@ -577,6 +577,66 @@ func Explorer(c *character.Character) {
 					fmt.Println("Choix invalide.")
 				}
 
+			}
+		case "morgane":
+			outils.ClearScreen()
+			ascii.AfficherASCII("BanqueASCII/morgane.txt")
+
+			lignes := []string{
+				"Un instant ! Un grand groupe de démons des ombres est en train de vous rejoindre à un enbranchement.",
+				"Vous éteignez votre torche et vous cachez dans un interstice. Ils passent à côté de vous sans vous remarquer.",
+				"Une elfe à la peau sombre guide le groupe. Les démons répondent à ses ordres... Ils se dirigent vers la surface !",
+				"1. Chercher une autre sortie.",
+				"0. Ouvrir le menu.",
+			}
+			outils.Encadrer(lignes)
+			choix := lireChoix(lecteur)
+			switch choix {
+			case "1":
+				localisation = "incendie"
+			case "0":
+				c.Menu()
+			default:
+				fmt.Println("Choix invalide.")
+			}
+		case "incendie":
+			outils.ClearScreen()
+			ascii.AfficherASCII("BanqueASCII/incendie.txt")
+			audio.PlayMusic("BanqueSon/musique/incendie.ogg")
+			audio.PlaySound("BanqueSon/monstre/dragoncri.ogg")
+			lignes := []string{
+				"Vous entendez un cri de dragon qui résonne dans la grotte. Ça venait de l'exterieur... Vous ressortez au sommet d'une colline.",
+				"Toute la ville est en flammes, la cathédrale s'effondre ! Un grand dragon noir est en train de tout ravager ! ",
+				"Il a ouvert une brèche dans les fortifications. Les démons en profitent pour donner l'assaut. L'elfe à leur tête est introuvable pour l'instant...",
+				"1. Foncer dans la bataille !",
+				"0. Ouvrir le menu.",
+			}
+			outils.Encadrer(lignes)
+			choix := lireChoix(lecteur)
+			switch choix {
+			case "1":
+				mort, err := combat.Lancer("dragon", c)
+				if err != nil {
+					fmt.Println("Erreur combat :", err)
+				}
+
+				if mort {
+					ascii.AfficherASCII("BanqueASCII/incendie.txt")
+					lignes := []string{
+						"La cathédrale a brulé...",
+						"Personne ne peut vous ressusciter.",
+						"GAME OVER",
+					}
+					outils.Encadrer(lignes)
+					os.Exit(0)
+				} else {
+					fmt.Println("\"Merci d'avoir joué !\"")
+				}
+
+			case "0":
+				c.Menu()
+			default:
+				fmt.Println("Choix invalide.")
 			}
 
 		}
