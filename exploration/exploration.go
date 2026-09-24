@@ -616,6 +616,7 @@ func Explorer(c *character.Character) {
 			choix := lireChoix(lecteur)
 			switch choix {
 			case "1":
+				audio.PlayMusic("BanqueSon/musique/cinematique.ogg")
 				err := video.PlayASCII(20)
 				if err != nil {
 					fmt.Println("Erreur lecture vidéo :", err)
