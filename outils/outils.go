@@ -4,13 +4,10 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"os/exec"
 )
 
 func ClearScreen() {
-	cmd := exec.Command("clear")
-	cmd.Stdout = os.Stdout
-	cmd.Run()
+	fmt.Print("\x1b[H\x1b[2J")
 }
 
 func AttendreEntree() {

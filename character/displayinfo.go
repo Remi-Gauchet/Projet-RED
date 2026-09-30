@@ -25,14 +25,14 @@ func (c Character) DisplayInfo() {
 
 	if c.QueteMagieNoire == 2 {
 		fmt.Println("\n--- Progression ---")
-		fmt.Println("J'ai récupéré un étrange cristal d'ombre sur la dépouille du roi des gobelins.")
-		fmt.Println("Un expert de l'ombre et de la lumière pourra certainement m'en dire plus. ")
+		fmt.Println("J'ai récupéré un étrange cristal d'ombre pure sur la dépouille du roi des gobelins.")
+		fmt.Println("Peut-être que le prêtre de la cathédrale pourra m'en dire plus ?")
 	}
 
 	if c.QueteMagieNoire == 3 {
 		fmt.Println("\n--- Progression ---")
-		fmt.Println("Le cristal sert maintenant de boussole vers le lieu d'origine du rituel.")
-		fmt.Println("Qui sait ce que j'y trouverai ? Je ferais mieux de me préparer.")
+		fmt.Println("Le cristal sert maintenant de boussole vers le lieu d'origine du rituel, et des séismes qui secouent la ville.")
+		fmt.Println("Qui sait ce que j'y trouverai ? Je ferais mieux de me préparer...")
 	}
 
 	if c.QueteMagieNoire == 4 {

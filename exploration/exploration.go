@@ -426,7 +426,7 @@ func Explorer(c *character.Character) {
 			case "1":
 				localisation = "ferme"
 			case "2":
-				mort, err := combat.Lancer("RoiGobelin", c)
+				mort, err := combat.Lancer("gobelin", c)
 				if err != nil {
 					fmt.Println("Erreur combat :", err)
 				}
@@ -465,6 +465,7 @@ func Explorer(c *character.Character) {
 					c.QueteMagieNoire++
 					outils.ClearScreen()
 					ascii.AfficherASCII("BanqueASCII/ferme.txt")
+					audio.PlayMusic("BanqueSon/musique/ambiance.ogg")
 					audio.PlaySound("BanqueSon/NPC/nainbonjour.ogg")
 					lignesQuete := []string{
 						"Les gobelins se dispersent ! La campagne devrait avoir un peu de répit. Un vieux fermier vous approche en s'essuyant le front :",
@@ -545,9 +546,9 @@ func Explorer(c *character.Character) {
 			ascii.AfficherASCII("BanqueASCII/trefonds.txt")
 
 			lignes := []string{
-				"Vous remarquez des cristaux fracturés sur le sol, et des roches vitrifiées. Une grande explosion a eu lieu ici.",
-				"Le chemin se divise en plusieurs galeries. L'un d'entre eux s'élargit vers un gouffre, et vous arrivez au bout du chemin.",
-				"Non... ce sont les Tréfonds ! Ce qu'il restes de la civilisation naine à son apogée, avant son ravage par les démons.",
+				"Des galeries sont creusées dans le sol, dont les parois sont en roche vitrifiée. Plusieurs explosions ont eu lieu ici.",
+				"Vous vous engouffrez dans l'une de ces galeries, qui s'élargit vers un gouffre. Vous voilà au bout du chemin.",
+				"Ce sont les Tréfonds ! Ce qu'il restes de la civilisation naine à son apogée, avant son ravage par les démons.",
 				"Vous essayez de passer inaperçu, mais une patrouille vous repère !",
 			}
 			outils.Encadrer(lignes)
@@ -565,7 +566,9 @@ func Explorer(c *character.Character) {
 				audio.PlayMusic("BanqueSon/musique/grotte.ogg")
 				c.QueteMagieNoire = 4
 				lignes := []string{
+					"Ces séismes... Quelqu'un a délibérément créé un passage pour les démons. Dans quel but ?",
 					"Vite, avant que d'autres n'arrivent !",
+					"Vous devez retourner en ville !",
 					"1. Faire demi tour et courir vers l'entrée de la grotte.",
 					"0. Menu.",
 				}
@@ -586,10 +589,10 @@ func Explorer(c *character.Character) {
 			ascii.AfficherASCII("BanqueASCII/morgane.txt")
 
 			lignes := []string{
-				"Un instant ! Un grand groupe de démons des ombres est en train de vous rejoindre à un enbranchement.",
-				"Vous éteignez votre torche et vous cachez dans un interstice. Ils passent à côté de vous sans vous remarquer.",
-				"Une elfe à la peau sombre guide le groupe. Les démons répondent à ses ordres... Ils se dirigent vers la surface !",
-				"1. Chercher une autre sortie.",
+				"Attention ! Vous entendez un grand groupe se déplacer dans le tunel d'à côté.",
+				"Vous éteignez votre torche et vous cachez. Les démons sont innombrables ! Ils affluent sans vous remarquer.",
+				"Vous appercevez une elfe à la peau sombre les guider. Les démons répondent à ses ordres. Ils se dirigent vers la surface !",
+				"1. Chercher une autre issue.",
 				"0. Ouvrir le menu.",
 			}
 			outils.Encadrer(lignes)
@@ -631,14 +634,18 @@ func Explorer(c *character.Character) {
 				if mort {
 					ascii.AfficherASCII("BanqueASCII/mort.txt")
 					lignes := []string{
-						"La cathédrale a brulé...",
+						"La cathédrale a brulé. Le prêtre est introuvable.",
 						"Personne ne vous ressuscitera plus.",
-						"GAME OVER",
+						"GAME OVER...",
 					}
 					outils.Encadrer(lignes)
+					outils.AttendreEntree()
+					outils.ClearScreen()
 					os.Exit(0)
 				} else {
-					fmt.Println("\"Merci d'avoir joué !\"")
+					outils.ClearScreen()
+					ascii.AfficherASCII("BanqueASCII/auberge.txt")
+					fmt.Println("\"Valentin et Rémi vous remercient d'avoir joué à leur jeu !\"")
 					os.Exit(0)
 				}
 

@@ -33,6 +33,7 @@ type Monstre struct {
 	Attaques     []Attaque
 	ToursGeles   int
 	XPAccordee   int
+	OrAccorde    int // Or donné au joueur quand le monstre est vaincu
 }
 
 // ----------------------------------------------------------------------------
@@ -53,6 +54,7 @@ func InitGobelin() Monstre {
 			{Nom: "Cri sauvage", Chance: 5, Degats: 30},
 		},
 		XPAccordee: 0, // Généré aléatoirement (35 à 50) pour les niveaux >= 2
+		OrAccorde:  0, // Généré aléatoirement (5 à 10) dans Combattre
 	}
 }
 
@@ -70,6 +72,7 @@ func InitRoiGobelin() Monstre {
 			{Nom: "Fureur du Roi", Chance: 5, Degats: 45},
 		},
 		XPAccordee: 80,
+		OrAccorde:  30,
 	}
 }
 
@@ -87,6 +90,7 @@ func InitDemon() Monstre {
 			{Nom: "Rituel de Douleur", Chance: 5, Degats: 60},
 		},
 		XPAccordee: 150,
+		OrAccorde:  60,
 	}
 }
 
@@ -104,6 +108,7 @@ func InitDragon() Monstre {
 			{Nom: "Rugissement Dévastateur", Chance: 5, Degats: 80},
 		},
 		XPAccordee: 300,
+		OrAccorde:  150,
 	}
 }
 
@@ -326,8 +331,8 @@ func TourJoueur(c *character.Character, monstre *Monstre, lecteur *bufio.Reader)
 		switch choix {
 		case "1":
 			fmt.Printf("\n%s tente un Coup Risqué...\n", c.Nom)
-			time.Sleep(500 * time.Millisecond)
-
+			chemin := "BanqueSon/" + c.Classe + "/attaque.ogg"
+			audio.PlaySoundBlocking(chemin)
 			if rand.Intn(2) == 0 {
 				fmt.Println("Raté ! Vous perdez votre tour.")
 			} else {
@@ -348,6 +353,8 @@ func TourJoueur(c *character.Character, monstre *Monstre, lecteur *bufio.Reader)
 				monstre.PVActuels = 0
 			}
 			fmt.Printf("\n%s utilise Frappe Rapide et inflige %d dégâts à %s !\n", c.Nom, degats, monstre.Nom)
+			chemin := "BanqueSon/" + c.Classe + "/attaque.ogg"
+			audio.PlaySound(chemin)
 			time.Sleep(1500 * time.Millisecond)
 			return
 
@@ -369,6 +376,8 @@ func TourJoueur(c *character.Character, monstre *Monstre, lecteur *bufio.Reader)
 					monstre.PVActuels = 0
 				}
 				fmt.Printf("\n%s utilise Coup Assommant et inflige %d dégâts !\n", c.Nom, degats)
+				chemin := "BanqueSon/" + c.Classe + "/attaque.ogg"
+				audio.PlaySound(chemin)
 
 				if rand.Intn(100) < 40 {
 					monstre.ToursGeles = 1
@@ -526,17 +535,24 @@ func Combattre(c *character.Character, monstre Monstre) bool {
 			outils.ClearScreen()
 			AfficherArene(c, &monstre)
 			fmt.Printf("\n🎉 Félicitations ! Vous avez vaincu %s !\n", monstre.Nom)
+			audio.PlayMusic("BanqueSon/musique/victoire.ogg")
 
 			var xpGagnee int
+			var orGagne int
 			if strings.Contains(strings.ToLower(monstre.Nom), "gobelin") && !strings.Contains(strings.ToLower(monstre.Nom), "roi") {
 				xpGagnee = rand.Intn(16) + 35 // entre 35 et 50 EXP
+				orGagne = rand.Intn(6) + 5    // entre 5 et 10 Or
 			} else {
 				xpGagnee = monstre.XPAccordee
+				orGagne = monstre.OrAccorde
 			}
 
 			AjouterXP(c, xpGagnee)
 
-			time.Sleep(3 * time.Second)
+			c.Or += orGagne
+			fmt.Printf("\n💰 Vous récupérez %d pièces d'or ! (Total : %d)\n", orGagne, c.Or)
+
+			outils.AttendreEntree()
 			break
 		}
 
@@ -545,7 +561,7 @@ func Combattre(c *character.Character, monstre Monstre) bool {
 			outils.ClearScreen()
 			AfficherArene(c, &monstre)
 			fmt.Printf("\n☠️ Vous avez été vaincu par %s...\n", monstre.Nom)
-			time.Sleep(2 * time.Second)
+			outils.AttendreEntree()
 			break
 		}
 	}
