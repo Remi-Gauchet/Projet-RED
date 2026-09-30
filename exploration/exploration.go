@@ -507,6 +507,7 @@ func Explorer(c *character.Character) {
 				"Ça vient vers vous !",
 			}
 			outils.Encadrer(lignes)
+			outils.AttendreEntree()
 			mort, err := combat.Lancer("demon", c)
 			if err != nil {
 				fmt.Println("Erreur combat :", err)
@@ -545,11 +546,12 @@ func Explorer(c *character.Character) {
 
 			lignes := []string{
 				"Vous remarquez des cristaux fracturés sur le sol, et des roches vitrifiées. Une grande explosion a eu lieu ici.",
-				"Le chemin se divise en plusieurs couloirs. L'un d'entre eux s'élargit vers un gouffre, et vous arrivez au bout du chemin.",
+				"Le chemin se divise en plusieurs galeries. L'un d'entre eux s'élargit vers un gouffre, et vous arrivez au bout du chemin.",
 				"Non... ce sont les Tréfonds ! Ce qu'il restes de la civilisation naine à son apogée, avant son ravage par les démons.",
 				"Vous essayez de passer inaperçu, mais une patrouille vous repère !",
 			}
 			outils.Encadrer(lignes)
+			outils.AttendreEntree()
 			mort, err := combat.Lancer("demon", c)
 			if err != nil {
 				fmt.Println("Erreur combat :", err)
@@ -650,7 +652,6 @@ func Explorer(c *character.Character) {
 	}
 }
 
-// lireChoix lit une ligne tapée par le joueur et la nettoie
 func lireChoix(lecteur *bufio.Reader) string {
 	fmt.Print("\nVotre choix : ")
 	saisie, _ := lecteur.ReadString('\n')
