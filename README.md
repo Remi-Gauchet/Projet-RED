@@ -1,7 +1,7 @@
 # Projet-RED
 
         Pour installer le jeu, vous devez cloner le repository avec
-        git clone
+        git clone https://github.com/Remi-Gauchet/Projet-RED
 
 Puis vous devez importer le contenu de go.mod pour pouvoir voir les images en couleurs, et entendre les sons
 tapez :
